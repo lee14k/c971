@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="C971.CourseDetailPage"
+             Title="Course Details">
+
+    <Grid Padding="20" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+          ColumnDefinitions="Auto,*">
+
+        <Label Grid.Row="0" Grid.Column="0" Text="Course Title:" FontAttributes="Bold" />
+        <Label Grid.Row="0" Grid.Column="1" Text="{Binding CourseTitle}" />
+
+        <Label Grid.Row="1" Grid.Column="0" Text="Start Date:" FontAttributes="Bold" />
+        <Label Grid.Row="1" Grid.Column="1" Text="{Binding StartDate, StringFormat='{}{0:MMMM dd, yyyy}'}" />
+
+        <Label Grid.Row="2" Grid.Column="0" Text="End Date:" FontAttributes="Bold" />
+        <Label Grid.Row="2" Grid.Column="1" Text="{Binding EndDate, StringFormat='{}{0:MMMM dd, yyyy}'}" />
+
+        <Label Grid.Row="3" Grid.Column="0" Text="Status:" FontAttributes="Bold" />
+        <Label Grid.Row="3" Grid.Column="1" Text="{Binding Status}" />
+
+        <Label Grid.Row="4" Grid.Column="0" Text="Instructor Id:" FontAttributes="Bold" />
+        <Label Grid.Row="4" Grid.Column="1" Text="{Binding InstructorId}" />
+
+        <Label Grid.Row="5" Grid.Column="0" Text="Notes:" FontAttributes="Bold" />
+        <Label Grid.Row="5" Grid.Column="1" Text="{Binding Notes}" />
+
+    </Grid>
+</ContentPage>

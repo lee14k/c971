@@ -64,4 +64,22 @@
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.9" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="CourseDetailPage.xaml.cs">
+	    <DependentUpon>CourseDetailPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="TermDetailPage.xaml.cs">
+	    <DependentUpon>TermDetailPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="CourseDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="TermDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>

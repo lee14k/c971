@@ -12,13 +12,10 @@ namespace C971
         {
             InitializeComponent();
 
-            // Initialize the observable collection
             Terms = new ObservableCollection<Term>();
 
-            // Set BindingContext for data binding
             BindingContext = this;
 
-            // Load the terms from the database
             LoadTerms();
         }
 
@@ -31,6 +28,19 @@ namespace C971
             foreach (var term in termsFromDb)
             {
                 Terms.Add(term);
+            }
+        }
+
+        private void DetailedTermButton_Clicked(object sender, EventArgs e)
+        {
+            var button = sender as Button;
+
+            var term = button?.BindingContext as Term;
+
+            if (term != null)
+            {
+
+                Navigation.PushModalAsync(new TermDetailPage(term));
             }
         }
     }

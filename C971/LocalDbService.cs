@@ -17,7 +17,8 @@ namespace C971
             try
             {
                 _connection = new SQLiteAsyncConnection(Path.Combine(FileSystem.AppDataDirectory, DB_NAME));
-                _connection.CreateTableAsync<Term>().Wait(); 
+                _connection.CreateTableAsync<Term>().Wait();
+                _connection.CreateTableAsync<Course>().Wait();
             }
             catch (Exception ex)
             {
@@ -63,7 +64,6 @@ namespace C971
                 return null;
             }
         }
-        // Method to get a term by its title
     public async Task<Term> GetByTermTitle(string title)
     {
         return await _connection.Table<Term>()
@@ -82,7 +82,11 @@ namespace C971
                 Console.WriteLine($"Error updating term: {ex.Message}");
             }
         }
+        public async Task<Term> GetTermsById (int id)
+        {
+            return await _connection.Table<Term>().Where(x => x.TermId == id).FirstOrDefaultAsync();
 
+        }
         public async Task DeleteTerm(Term term)
         {
             try
@@ -93,6 +97,22 @@ namespace C971
             catch (Exception ex)
             {
                 Console.WriteLine($"Error deleting term: {ex.Message}");
+            }
+        }
+        public Task<List<Course>> GetCoursesByTermId(int termId)
+        {
+            return _connection.Table<Course>().Where(c => c.TermId == termId).ToListAsync();
+        }
+        public async Task CreateCourse(Course course)
+        {
+            try
+            {
+                await _connection.InsertAsync(course);
+                Console.WriteLine("Term successfully inserted.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error inserting term: {ex.Message}");
             }
         }
     }
