@@ -31,7 +31,7 @@ namespace C971
             }
         }
 
-        private void DetailedTermButton_Clicked(object sender, EventArgs e)
+        private async void DetailedTermButton_Clicked(object sender, EventArgs e)
         {
             var button = sender as Button;
 
@@ -40,7 +40,16 @@ namespace C971
             if (term != null)
             {
 
-                Navigation.PushModalAsync(new TermDetailPage(term));
+                await Navigation.PushAsync(new TermDetailPage(term));
+            }
+        }
+
+        private async void EditTermButton_Click(object sender, EventArgs e)
+        {
+            var button = sender as Button;
+            var term = button?.BindingContext as Term;
+            if (term != null)
+            {
             }
         }
     }

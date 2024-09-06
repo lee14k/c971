@@ -123,7 +123,7 @@ namespace C971
                 }
             }
         }
-        private void DetailedCourseButton_Clicked(object sender, EventArgs e)
+        private async void DetailedCourseButton_Clicked(object sender, EventArgs e)
         {
             
                 var button = sender as Button;
@@ -133,8 +133,8 @@ namespace C971
 
             if (course != null)
                 {
-
-                    Navigation.PushModalAsync(new CourseDetailPage(course));
+                
+                await    Navigation.PushAsync(new CourseDetailPage(course));
                 }
             
         }

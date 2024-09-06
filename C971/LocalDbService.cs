@@ -19,6 +19,7 @@ namespace C971
                 _connection = new SQLiteAsyncConnection(Path.Combine(FileSystem.AppDataDirectory, DB_NAME));
                 _connection.CreateTableAsync<Term>().Wait();
                 _connection.CreateTableAsync<Course>().Wait();
+                _connection.CreateTableAsync<Instructor>().Wait(); 
             }
             catch (Exception ex)
             {
@@ -64,12 +65,20 @@ namespace C971
                 return null;
             }
         }
-    public async Task<Term> GetByTermTitle(string title)
-    {
-        return await _connection.Table<Term>()
-                                .Where(x => x.TermTitle == title)
-                                .FirstOrDefaultAsync();
-    }
+
+        public async Task<Term> GetByTermTitle(string title)
+        {
+            try
+            {
+                return await _connection.Table<Term>().Where(x => x.TermTitle == title).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving term by title: {ex.Message}");
+                return null;
+            }
+        }
+
         public async Task UpdateTerm(Term term)
         {
             try
@@ -82,11 +91,7 @@ namespace C971
                 Console.WriteLine($"Error updating term: {ex.Message}");
             }
         }
-        public async Task<Term> GetTermsById (int id)
-        {
-            return await _connection.Table<Term>().Where(x => x.TermId == id).FirstOrDefaultAsync();
 
-        }
         public async Task DeleteTerm(Term term)
         {
             try
@@ -99,20 +104,112 @@ namespace C971
                 Console.WriteLine($"Error deleting term: {ex.Message}");
             }
         }
-        public Task<List<Course>> GetCoursesByTermId(int termId)
+        public async Task<List<Course>> GetCoursesByTermId(int termId)
         {
-            return _connection.Table<Course>().Where(c => c.TermId == termId).ToListAsync();
+            try
+            {
+                return await _connection.Table<Course>().Where(c => c.TermId == termId).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving courses for term ID {termId}: {ex.Message}");
+                return new List<Course>();
+            }
         }
+
         public async Task CreateCourse(Course course)
         {
             try
             {
                 await _connection.InsertAsync(course);
-                Console.WriteLine("Term successfully inserted.");
+                Console.WriteLine("Course successfully inserted.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error inserting term: {ex.Message}");
+                Console.WriteLine($"Error inserting course: {ex.Message}");
+            }
+        }
+
+        public async Task UpdateCourse(Course course)
+        {
+            try
+            {
+                await _connection.UpdateAsync(course);
+                Console.WriteLine("Course successfully updated.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating course: {ex.Message}");
+            }
+        }
+
+        public async Task<Course> GetCourseById(int id)
+        {
+            try
+            {
+                return await _connection.Table<Course>().Where(x => x.CourseId == id).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving course by ID: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task CreateInstructor(Instructor instructor)
+        {
+            try
+            {
+                await _connection.InsertAsync(instructor);
+                Console.WriteLine("Instructor successfully inserted.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error inserting instructor: {ex.Message}");
+            }
+        }
+
+        public async Task UpdateInstructor(Instructor instructor)
+        {
+            try
+            {
+                await _connection.UpdateAsync(instructor);
+                Console.WriteLine("Instructor successfully updated.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating instructor: {ex.Message}");
+            }
+        }
+
+        public async Task<Instructor> GetInstructorByCourseId(int courseId)
+        {
+            return await _connection.Table<Instructor>()
+                                    .FirstOrDefaultAsync(i => i.CourseId == courseId); // Returns the first instructor associated with the course
+        }
+        public async Task<List<Instructor>> GetAllInstructors()
+        {
+            try
+            {
+                return await _connection.Table<Instructor>().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving all instructors: {ex.Message}");
+                return new List<Instructor>();
+            }
+        }
+
+        public async Task<List<Instructor>> GetInstructorById(int instructorId)
+        {
+            try
+            {
+                return await _connection.Table<Instructor>().Where(i => i.InstructorId == instructorId).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving instructors by ID: {ex.Message}");
+                return new List<Instructor>();
             }
         }
     }

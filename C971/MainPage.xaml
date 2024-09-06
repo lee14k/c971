@@ -9,16 +9,19 @@
             Padding="30,0"
             Spacing="25">
 
-            <HorizontalStackLayout>
+            <HorizontalStackLayout Spacing="20">
                 <Image
-                    Source="userprofile.png"
+                    Source="userprofile.svg"
                     HeightRequest="100"
                     FlexLayout.AlignSelf="Center"
-                    Aspect="AspectFit"
+                    VerticalOptions="Center"
+                    Aspect="AspectFill"
                     SemanticProperties.Description="dot net bot in a race car number eight" />
 
                 <Label
                     Text="Welcome, Student!"
+                    FontSize="Large"
+                    VerticalOptions="Center"
                     SemanticProperties.HeadingLevel="Level1" 
                     FlexLayout.AlignSelf="Center" />
             </HorizontalStackLayout>
@@ -26,16 +29,24 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame Margin="10" BackgroundColor="LightSlateGray">
-                            <Grid ColumnDefinitions="Auto,*,Auto,Auto" RowDefinitions="Auto,Auto">
-                                <Label Grid.Column="1" Text="{Binding TermTitle}" />
-                                <DatePicker Grid.Column="2" Grid.Row="0" Date="{Binding StartDate}" />
-                                <DatePicker Grid.Column="3" Grid.Row="0" Date="{Binding EndDate}" />
-                                <Button Clicked="DetailedTermButton_Clicked" x:Name="DetailedTermButton" Text="Go to Courses" TextColor="Black"  Grid.Column="4" Grid.Row="2"></Button>
+                            <Grid ColumnDefinitions="Auto,*,Auto,Auto" RowDefinitions="Auto,Auto,Auto">
+                                <Label Grid.Column="0" FontSize="Large" FontAttributes="Bold" TextColor="White" Text="{Binding TermTitle}" />
+
+                                <Label Grid.Row="1" TextColor="White" Grid.Column="0" Grid.ColumnSpan="2" 
+               Text="{Binding StartDate, StringFormat='{}{0:MMMM dd, yyyy}'}" 
+              />
+
+                                <Label Grid.Row="2" TextColor="White" Grid.Column="0" Grid.ColumnSpan="2"
+               Text="{Binding EndDate, StringFormat='{}{0:MMMM dd, yyyy}'}" 
+                />
+
+                                <Button Clicked="DetailedTermButton_Clicked" TextColor="White" x:Name="DetailedTermButton" Text="Go to Courses" Grid.Column="3" Grid.Row="0" Grid.RowSpan="3" ></Button>
                             </Grid>
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+            <Button Text="Edit Terms" TextColor="White"></Button>
 
         </VerticalStackLayout>
     </ScrollView>
