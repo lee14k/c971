@@ -13,16 +13,13 @@ namespace C971
         [AutoIncrement]
         [Column("CourseId")]   
         public int CourseId { get; set; }
-
         [Column("TermId")]
         public int TermId { get; set; }
         [Column("CourseTitle")]
         public string CourseTitle { get; set; }
         [Column("StartDate")]
-
         public DateTime StartDate { get; set; }
         [Column("EndDate")]
-
         public DateTime EndDate { get; set; }
         [Column("Status")]
         public string Status { get; set; }
@@ -32,6 +29,5 @@ namespace C971
         public bool Notifications { get; set; }
         [Column("Notes")]
         public string Notes { get; set; }
-
     }
 }

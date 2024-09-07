@@ -60,6 +60,7 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Plugin.LocalNotification" Version="10.1.8" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.9" />
 	</ItemGroup>
@@ -71,16 +72,43 @@
 	  <Compile Update="EditCoursePage.xaml.cs">
 	    <DependentUpon>EditCoursePage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="AssessmentDetailPage.xaml.cs">
+	    <DependentUpon>AssessmentDetailPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="EditAssessmentPage.xaml.cs">
+	    <DependentUpon>EditAssessmentPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="EditTermsPage.xaml.cs">
+	    <DependentUpon>EditTermsPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="TermDetailPage.xaml.cs">
 	    <DependentUpon>TermDetailPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="AddAssessmentPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="AddCoursePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="AddTermPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="CourseDetailPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="EditCoursePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="AssessmentDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="EditAssessmentPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="EditTermsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="TermDetailPage.xaml">

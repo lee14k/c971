@@ -4,51 +4,89 @@
              x:Class="C971.MainPage">
 
     <ScrollView>
-        <VerticalStackLayout
-            FlexLayout.AlignSelf="Center"
-            Padding="30,0"
-            Spacing="25">
+        <VerticalStackLayout FlexLayout.AlignSelf="Center"
+                             Padding="30,0"
+                             Spacing="25">
+
+            <Button x:Name="ToggleNotificationsButton"
+                    Text="View Notifications"
+                    Clicked="OnToggleNotificationsClicked">
+            </Button>
 
             <HorizontalStackLayout Spacing="20">
-                <Image
-                    Source="userprofile.svg"
-                    HeightRequest="100"
-                    FlexLayout.AlignSelf="Center"
-                    VerticalOptions="Center"
-                    Aspect="AspectFill"
-                    SemanticProperties.Description="dot net bot in a race car number eight" />
-
-                <Label
-                    Text="Welcome, Student!"
-                    FontSize="Large"
-                    VerticalOptions="Center"
-                    SemanticProperties.HeadingLevel="Level1" 
-                    FlexLayout.AlignSelf="Center" />
+                <Image Source="userprofile.svg"
+                       HeightRequest="100"
+                       FlexLayout.AlignSelf="Center"
+                       VerticalOptions="Center"
+                       Aspect="AspectFill"
+                       SemanticProperties.Description="dot net bot in a race car number eight" />
+                <Label Text="Welcome, Student!"
+                       FontSize="Large"
+                       VerticalOptions="Center"
+                       SemanticProperties.HeadingLevel="Level1"
+                       FlexLayout.AlignSelf="Center" />
             </HorizontalStackLayout>
+
+            <!-- Term Collection -->
             <CollectionView ItemsSource="{Binding Terms}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame Margin="10" BackgroundColor="LightSlateGray">
-                            <Grid ColumnDefinitions="Auto,*,Auto,Auto" RowDefinitions="Auto,Auto,Auto">
-                                <Label Grid.Column="0" FontSize="Large" FontAttributes="Bold" TextColor="White" Text="{Binding TermTitle}" />
+                        <!-- StackLayout is the root element for the DataTemplate -->
+                        <StackLayout Padding="10">
+                            <Frame BackgroundColor="LightSlateGray">
+                                <Grid ColumnDefinitions="Auto,*,Auto"
+                                      RowDefinitions="Auto,Auto,Auto">
+                                    <Label Grid.Column="0"
+                                           FontSize="Large"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           Text="{Binding TermTitle}" />
+                                    <Label Grid.Row="1"
+                                           TextColor="White"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="2"
+                                           Text="{Binding StartDate, StringFormat='{}{0:MMMM dd, yyyy}'}" />
+                                    <Label Grid.Row="2"
+                                           TextColor="White"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="2"
+                                           Text="{Binding EndDate, StringFormat='{}{0:MMMM dd, yyyy}'}" />
 
-                                <Label Grid.Row="1" TextColor="White" Grid.Column="0" Grid.ColumnSpan="2" 
-               Text="{Binding StartDate, StringFormat='{}{0:MMMM dd, yyyy}'}" 
-              />
+                                    <!-- Go to Courses Button -->
+                                    <Button Clicked="DetailedTermButton_Clicked"
+                                            TextColor="White"
+                                            Text="Go to Courses"
+                                            Grid.Column="2"
+                                            Grid.Row="0"
+                                            Grid.RowSpan="3" />
+                                </Grid>
+                            </Frame>
 
-                                <Label Grid.Row="2" TextColor="White" Grid.Column="0" Grid.ColumnSpan="2"
-               Text="{Binding EndDate, StringFormat='{}{0:MMMM dd, yyyy}'}" 
-                />
-
-                                <Button Clicked="DetailedTermButton_Clicked" TextColor="White" x:Name="DetailedTermButton" Text="Go to Courses" Grid.Column="3" Grid.Row="0" Grid.RowSpan="3" ></Button>
-                            </Grid>
-                        </Frame>
+                            <!-- Edit Button (below each Frame) -->
+                            <Button Clicked="EditTermButton_Click"
+                                    TextColor="White"
+                                    Text="Edit Term" />
+                        </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            <Button Text="Edit Terms" TextColor="White"></Button>
 
+            <Button Text="Add a Term"
+                    Clicked="OnAddTermClicked"
+                    TextColor="White"
+                    ></Button>
+
+            <!-- Notifications List -->
+            <ListView x:Name="NotificationsListView"
+                      IsVisible="False"
+                      ItemsSource="{Binding ScheduledNotifications}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding Title}"
+                                  Detail="{Binding Description}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

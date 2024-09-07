@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="C971.EditCoursePage"
-             Title="Edit Course">
-
+             x:Class="C971.AddCoursePage"
+             Title="AddCoursePage">
     <Grid Padding="20"
           RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
           ColumnDefinitions="Auto,*,Auto"
           RowSpacing="10"
           ColumnSpacing="10">
-
         <Label Grid.Row="0"
                Grid.Column="0"
                Text="Edit Course Title:"
@@ -25,7 +23,6 @@
                HeightRequest="20"
                WidthRequest="20"
                VerticalOptions="Center" />
-
         <Label Grid.Row="1"
                Grid.Column="0"
                Text="Start Date:"
@@ -43,7 +40,6 @@
                HeightRequest="20"
                WidthRequest="20"
                VerticalOptions="Center" />
-
         <Label Grid.Row="2"
                Grid.Column="0"
                Text="End Date:"
@@ -61,7 +57,6 @@
                HeightRequest="20"
                WidthRequest="20"
                VerticalOptions="Center" />
-
         <Label Grid.Row="3"
                Grid.Column="0"
                Text="Status:"
@@ -87,7 +82,6 @@
                HeightRequest="20"
                WidthRequest="20"
                VerticalOptions="Center" />
-
         <Label Grid.Row="4"
                Grid.Column="0"
                Text="Instructor Name:"
@@ -103,7 +97,6 @@
                HeightRequest="20"
                WidthRequest="20"
                VerticalOptions="Center" />
-
         <Label Grid.Row="5"
                Grid.Column="0"
                Text="Instructor Email:"
@@ -119,7 +112,6 @@
                HeightRequest="20"
                WidthRequest="20"
                VerticalOptions="Center" />
-
         <Label Grid.Row="6"
                Grid.Column="0"
                Text="Instructor Phone:"
@@ -135,7 +127,6 @@
                HeightRequest="20"
                WidthRequest="20"
                VerticalOptions="Center" />
-
         <Label Grid.Row="7"
                Grid.Column="0"
                Text="Notes:"
@@ -152,13 +143,6 @@
                HeightRequest="20"
                WidthRequest="20"
                VerticalOptions="Start" />
-        <Button Grid.Row="11"
-                Grid.Column="0"
-                Grid.ColumnSpan="3"
-                Text="Delete Term"
-                TextColor="Red"
-                Clicked="OnDeleteCourseClicked"
-                Margin="0,10,0,0" />
         <Button Grid.Row="12"
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
@@ -166,6 +150,5 @@
                 TextColor="Black"
                 Clicked="OnSaveButtonClicked"
                 Margin="0,20,0,0" />
-
     </Grid>
 </ContentPage>

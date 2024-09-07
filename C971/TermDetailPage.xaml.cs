@@ -4,49 +4,50 @@ namespace C971
 {
     public partial class TermDetailPage : ContentPage
     {
-        private Term _term;
-        public ObservableCollection<Course> Courses { get; set; } 
-
+        public Term Term { get; set; }
+        public ObservableCollection<Course> Courses { get; set; }
         public TermDetailPage(Term term)
         {
-            _term = term;
             InitializeComponent();
+            Term = term;
             Courses = new ObservableCollection<Course>();
-
-            BindingContext = new
-            {
-                Term = _term,
-                Courses = Courses
-            };
+            BindingContext = this;
         }
-
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-
-            await InsertDummyCoursesForTerm(_term.TermId);
-
-            await LoadCourses(_term.TermId);
+            await InsertDummyCoursesForTerm(Term.TermId);
+            await LoadCourses(Term.TermId);
         }
-
         private async Task LoadCourses(int termId)
         {
             var dbService = new LocalDbService();
             var coursesFromDb = await dbService.GetCoursesByTermId(termId);
 
-            Courses.Clear();
-            foreach (var course in coursesFromDb)
+            if (coursesFromDb != null && coursesFromDb.Count > 0)
             {
-                Courses.Add(course);
+                Courses.Clear();
+                foreach (var course in coursesFromDb)
+                {
+                    Courses.Add(course);
+                }
             }
+            else
+            {
+                Console.WriteLine("No courses found for this term.");
+            }
+            Console.WriteLine($"Total courses loaded: {Courses.Count}");
         }
         private async Task InsertDummyCoursesForTerm(int termId)
         {
             var dbService = new LocalDbService();
 
+            // Check if there are already courses for this term
             var existingCourses = await dbService.GetCoursesByTermId(termId);
+
             if (existingCourses.Count == 0)
             {
+                // If no courses exist, insert dummy courses
                 var dummyCourses = new List<Course>
                 {
                     new Course
@@ -81,63 +82,51 @@ namespace C971
                         InstructorId = 3,
                         Notifications = false,
                         Notes = "Introductory programming course."
-                    },
-                    new Course
-                    {
-                        CourseTitle = "Physics 101",
-                        TermId = termId,
-                        StartDate = DateTime.Parse("2024-09-01"),
-                        EndDate = DateTime.Parse("2024-12-15"),
-                        Status = "In Progress",
-                        InstructorId = 4,
-                        Notifications = true,
-                        Notes = "Physics course covering mechanics and thermodynamics."
-                    },
-                    new Course
-                    {
-                        CourseTitle = "Biology 101",
-                        TermId = termId,
-                        StartDate = DateTime.Parse("2024-09-01"),
-                        EndDate = DateTime.Parse("2024-12-15"),
-                        Status = "Completed",
-                        InstructorId = 5,
-                        Notifications = false,
-                        Notes = "Biology course covering cell biology and genetics."
-                    },
-                    new Course
-                    {
-                        CourseTitle = "Chemistry 101",
-                        TermId = termId,
-                        StartDate = DateTime.Parse("2024-09-01"),
-                        EndDate = DateTime.Parse("2024-12-15"),
-                        Status = "In Progress",
-                        InstructorId = 6,
-                        Notifications = true,
-                        Notes = "Chemistry course covering organic and inorganic chemistry."
                     }
                 };
 
+                // Insert dummy courses into the database
                 foreach (var course in dummyCourses)
                 {
-                    await dbService.CreateCourse(course);
+                    await dbService.CreateCourse(termId, course);
                 }
+
+                Console.WriteLine("Dummy courses inserted.");
             }
+            else
+            {
+                Console.WriteLine("Courses already exist for this term.");
+            }
+        }
+        private async Task EditCourse(Course course)
+        {
+            await Navigation.PushAsync(new EditCoursePage(course));
+        }
+        private async void AddCourseButton_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new AddCoursePage(Term.TermId));
         }
         private async void DetailedCourseButton_Clicked(object sender, EventArgs e)
         {
-            
-                var button = sender as Button;
-
+            var button = sender as Button;
             var course = button?.BindingContext as Course;
 
-
             if (course != null)
-                {
-                
-                await    Navigation.PushAsync(new CourseDetailPage(course));
-                }
-            
+            {
+                await Navigation.PushAsync(new CourseDetailPage(course));
+            }
         }
+        private async void OnDeleteTermClicked(object sender, EventArgs e)
+        {
+            bool confirm = await DisplayAlert("Confirm Delete", $"Are you sure you want to delete the term: {Term.TermTitle}?", "Yes", "No");
 
+            if (confirm)
+            {
+                var dbService = new LocalDbService();
+                await dbService.DeleteTerm(Term);
+                await DisplayAlert("Deleted", "Term deleted successfully.", "OK");
+                await Navigation.PopAsync();
+            }
+        }
     }
 }

@@ -1,42 +1,169 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="C971.CourseDetailPage"
              Title="Course Details">
+    <ScrollView VerticalOptions="FillAndExpand">
+        <Frame Margin="20"
+               Padding="20"
+               BackgroundColor="LightSlateGray"
+               CornerRadius="10">
+            <VerticalStackLayout Spacing="20">
+                <!-- Course Title Section -->
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Course Title:"
+                           FontSize="Large"
+                           TextColor="White" />
+                    <Label Text="{Binding Course.CourseTitle}"
+                           FontSize="Medium"
+                           TextColor="White" />
+                </VerticalStackLayout>
 
-    <Grid Padding="20" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
-          ColumnDefinitions="Auto,*">
+                <!-- Course Dates Section -->
+                <VerticalStackLayout Spacing="15">
+                    <Grid RowDefinitions="Auto,Auto"
+                          ColumnDefinitions="*,Auto"
+                          RowSpacing="10"
+                          ColumnSpacing="10">
+                        <!-- Start Date -->
+                        <VerticalStackLayout Grid.Row="0"
+                                             Grid.Column="0"
+                                             Spacing="5">
+                            <Label Text="Course Start Date:"
+                                   FontSize="Large"
+                                   TextColor="White" />
+                            <Label Text="{Binding Course.StartDate, StringFormat='{}{0:MMMM dd, yyyy}'}"
+                                   FontSize="Medium"
+                                   TextColor="White" />
+                        </VerticalStackLayout>
+                        <Button Grid.Row="0"
+                                Grid.Column="1"
+                                Text="Set Reminder"
+                                Clicked="SetStartDateReminder_Clicked"
+                                BackgroundColor="LightGray"
+                                TextColor="Black"
+                                VerticalOptions="End" />
 
-        <Label Grid.Row="0" Grid.Column="0" Text="Course Title:" FontAttributes="Bold" />
-        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Course.CourseTitle}" />
+                        <!-- End Date -->
+                        <VerticalStackLayout Grid.Row="1"
+                                             Grid.Column="0"
+                                             Spacing="5">
+                            <Label Text="Course End Date:"
+                                   FontSize="Large"
+                                   TextColor="White" />
+                            <Label Text="{Binding Course.EndDate, StringFormat='{}{0:MMMM dd, yyyy}'}"
+                                   FontSize="Medium"
+                                   TextColor="White" />
+                        </VerticalStackLayout>
+                        <Button Grid.Row="1"
+                                Grid.Column="1"
+                                Text="Set Reminder"
+                                Clicked="SetEndDateReminder_Clicked"
+                                BackgroundColor="LightGray"
+                                TextColor="Black"
+                                VerticalOptions="End" />
+                    </Grid>
+                </VerticalStackLayout>
 
-        <Label Grid.Row="1" Grid.Column="0" Text="Start Date:" FontAttributes="Bold" />
-        <Label Grid.Row="1" Grid.Column="1" Text="{Binding Course.StartDate, StringFormat='{}{0:MMMM dd, yyyy}'}" />
+                <!-- Course Status Section -->
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Course Status:"
+                           FontSize="Large"
+                           TextColor="White" />
+                    <Label Text="{Binding Course.Status}"
+                           FontSize="Medium"
+                           FontAttributes="Bold"
+                           TextColor="White" />
+                </VerticalStackLayout>
 
-        <Label Grid.Row="2" Grid.Column="0" Text="End Date:" FontAttributes="Bold" />
-        <Label Grid.Row="2" Grid.Column="1" Text="{Binding Course.EndDate, StringFormat='{}{0:MMMM dd, yyyy}'}" />
-
-        <Label Grid.Row="3" Grid.Column="0" Text="Status:" FontAttributes="Bold" />
-        <Label Grid.Row="3" Grid.Column="1" Text="{Binding Course.Status}" />
-
-        <Label Grid.Row="4" Grid.Column="0" Text="Instructor Name:" FontAttributes="Bold" />
-        <Label Grid.Row="4" Grid.Column="1" Text="{Binding Instructor.InstructorName}" />
-
-        <Label Grid.Row="5" Grid.Column="0" Text="Instructor Email:" FontAttributes="Bold" />
-        <Label Grid.Row="5" Grid.Column="1" Text="{Binding Instructor.InstructorEmail}" />
-
-        <Label Grid.Row="6" Grid.Column="0" Text="Instructor Phone Number:" FontAttributes="Bold" />
-        <Label Grid.Row="6" Grid.Column="1" Text="{Binding Instructor.InstructorPhone}" />
-
-        <Label Grid.Row="8" Grid.Column="0" Text="Notes:" FontAttributes="Bold" />
-        <Label Grid.Row="8" Grid.Column="1" Text="{Binding Notes}" />
-        <Button Clicked="AssesmentInfoButton_Clicked" x:Name="AssesmentInfoButton" Text="Course Assessments" TextColor="Black" Grid.Row="8" Grid.Column="1">
-
-        </Button>
-        <Button Clicked="EditCourseInfoButton_Clicked" x:Name="EditCourseInfoButton" Text="Edit this course" TextColor="Black" Grid.Row="8" Grid.Column="1">
-
-        </Button>
-    </Grid>
-
-
+                <!-- Instructor Information Section -->
+                <Frame BackgroundColor="SlateGray"
+                       Padding="15"
+                       CornerRadius="8"
+                       Margin="0,0,0,10">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Instructor Information"
+                               FontSize="Large"
+                               TextColor="White"
+                               FontAttributes="Bold" />
+                        <Grid RowDefinitions="Auto,Auto,Auto"
+                              ColumnDefinitions="100,*"
+                              RowSpacing="10"
+                              ColumnSpacing="15">
+                            <!-- Name -->
+                            <Label Grid.Row="0"
+                                   Grid.Column="0"
+                                   Text="Name:"
+                                   TextColor="White"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Row="0"
+                                   Grid.Column="1"
+                                   Text="{Binding Instructor.InstructorName}"
+                                   TextColor="White" />
+                            <!-- Email -->
+                            <Label Grid.Row="1"
+                                   Grid.Column="0"
+                                   Text="Email:"
+                                   TextColor="White"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Row="1"
+                                   Grid.Column="1"
+                                   Text="{Binding Instructor.InstructorEmail}"
+                                   TextColor="White" />
+                            <!-- Phone -->
+                            <Label Grid.Row="2"
+                                   Grid.Column="0"
+                                   Text="Phone:"
+                                   TextColor="White"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Row="2"
+                                   Grid.Column="1"
+                                   Text="{Binding Instructor.InstructorPhone}"
+                                   TextColor="White" />
+                        </Grid>
+                    </VerticalStackLayout>
+                </Frame>
+                <!-- Course Notes Section -->
+                <Frame BackgroundColor="SlateGray"
+                       Padding="15"
+                       CornerRadius="8"
+                       Margin="0,0,0,10">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Notes:"
+                               FontSize="Large"
+                               TextColor="White" />
+                        <ScrollView HeightRequest="100">
+                            <Label Text="{Binding Course.Notes}"
+                                   TextColor="White" />
+                        </ScrollView>
+                        <Button Text="Share Notes"
+                                Clicked="OnShareNotesButtonClicked"
+                                BackgroundColor="LightGray"
+                                TextColor="Black"
+                                HorizontalOptions="End" />
+                    </VerticalStackLayout>
+                </Frame>
+                <!-- Course Details and Actions Section -->
+                <Frame BackgroundColor="SlateGray"
+                       Padding="15"
+                       CornerRadius="8">
+                    <Grid ColumnDefinitions="*,*"
+                          RowSpacing="10"
+                          ColumnSpacing="15">
+                        <Button Grid.Row="0"
+                                Grid.Column="0"
+                                Text="Assessments"
+                                Clicked="AssessmentInfoButton_Clicked"
+                                BackgroundColor="LightGray"
+                                TextColor="Black" />
+                        <Button Grid.Row="0"
+                                Grid.Column="1"
+                                Text="Edit this course"
+                                Clicked="EditCourseInfoButton_Clicked"
+                                BackgroundColor="LightGray"
+                                TextColor="Black" />
+                    </Grid>
+                </Frame>
+            </VerticalStackLayout>
+        </Frame>
+    </ScrollView>
 </ContentPage>

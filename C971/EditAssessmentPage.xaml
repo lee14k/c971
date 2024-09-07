@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="C971.EditAssessmentPage"
+             Title="Edit Assessment">
+    <ScrollView>
+        <Grid Padding="20"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+              ColumnDefinitions="Auto,*,Auto"
+              RowSpacing="20"
+              ColumnSpacing="10">
+            <Label Grid.Row="0"
+                   Grid.Column="0"
+                   Text="Assessment Title:"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center" />
+            <Entry Grid.Row="0"
+                   Grid.Column="1"
+                   Text="{Binding Assessment.AssessmentTitle}"
+                   VerticalOptions="Center" />
+            <Image Grid.Row="0"
+                   Grid.Column="2"
+                   Source="penciledit.png"
+                   HeightRequest="20"
+                   WidthRequest="20"
+                   VerticalOptions="Center" />
+            <Label Grid.Row="1"
+                   Grid.Column="0"
+                   Text="Assessment Type:"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center" />
+            <Picker Grid.Row="1"
+                    Grid.Column="1"
+                    Title="Select Assessment Type"
+                    SelectedItem="{Binding Assessment.AssessmentType}"
+                    VerticalOptions="Center">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Objective</x:String>
+                        <x:String>Performance</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+            <Image Grid.Row="1"
+                   Grid.Column="2"
+                   Source="penciledit.png"
+                   HeightRequest="20"
+                   WidthRequest="20"
+                   VerticalOptions="Center" />
+            <Label Grid.Row="2"
+                   Grid.Column="0"
+                   Text="Start Date:"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center" />
+            <DatePicker Grid.Row="2"
+                        Grid.Column="1"
+                        Date="{Binding Assessment.StartDate}"
+                        VerticalOptions="Center" />
+            <Image Grid.Row="2"
+                   Grid.Column="2"
+                   Source="penciledit.png"
+                   HeightRequest="20"
+                   WidthRequest="20"
+                   VerticalOptions="Center" />
+            <Label Grid.Row="3"
+                   Grid.Column="0"
+                   Text="End Date:"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center" />
+            <DatePicker Grid.Row="3"
+                        Grid.Column="1"
+                        Date="{Binding Assessment.EndDate}"
+                        VerticalOptions="Center" />
+            <Image Grid.Row="3"
+                   Grid.Column="2"
+                   Source="penciledit.png"
+                   HeightRequest="20"
+                   WidthRequest="20"
+                   VerticalOptions="Center" />
+            <Button Grid.Row="6"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    Text="Save Changes"
+                    BackgroundColor="#007AFF"
+                    TextColor="White"
+                    CornerRadius="5"
+                    Clicked="OnSaveButtonClicked"
+                    HeightRequest="50" />
+
+        </Grid>
+    </ScrollView>
+</ContentPage>

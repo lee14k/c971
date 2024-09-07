@@ -5,49 +5,89 @@
              Title="Term Details">
 
     <ScrollView VerticalOptions="FillAndExpand">
-
-
-
-        <VerticalStackLayout Padding="20" Spacing="10">
+        <VerticalStackLayout Padding="20"
+                             Spacing="10">
 
             <HorizontalStackLayout Spacing="15">
-                <Label Text="Term Title:" FontSize="Large"   />
-                <Label Text="{Binding Term.TermTitle}" FontSize="Medium"  />
-            </HorizontalStackLayout>
-            <HorizontalStackLayout Spacing="15" >
-                <Label Text="Start Date:" FontSize="Large" />
-                <Label Text="{Binding Term.StartDate, StringFormat='{}{0:MMMM dd, yyyy}'}" FontSize="Medium" />
-
+                <Label Text="Term Title:"
+                       FontSize="Large" />
+                <Label Text="{Binding Term.TermTitle}"
+                       FontSize="Medium" />
             </HorizontalStackLayout>
 
             <HorizontalStackLayout Spacing="15">
-                <Label Text="End Date:" FontSize="Large" />
-                <Label Text="{Binding Term.EndDate, StringFormat='{}{0:MMMM dd, yyyy}'}" FontSize="Medium" />
+                <Label Text="Start Date:"
+                       FontSize="Large" />
+                <Label Text="{Binding Term.StartDate, StringFormat='{}{0:MMMM dd, yyyy}'}"
+                       FontSize="Medium" />
             </HorizontalStackLayout>
-            
 
-            <Label Text="Courses:" FontSize="Large" />
-            <CollectionView ItemsSource="{Binding Courses}" HeightRequest="300">
+            <HorizontalStackLayout Spacing="15">
+                <Label Text="End Date:"
+                       FontSize="Large" />
+                <Label Text="{Binding Term.EndDate, StringFormat='{}{0:MMMM dd, yyyy}'}"
+                       FontSize="Medium" />
+            </HorizontalStackLayout>
+
+            <Label Text="Courses:"
+                   FontSize="Large" />
+            <CollectionView ItemsSource="{Binding Courses}"
+                            HeightRequest="300">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame Margin="0,5" BackgroundColor="LightSlateGray">
-                            <Grid ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto" RowSpacing="5">
-                                <Label Grid.ColumnSpan="3" Text="{Binding CourseTitle}" FontSize="Medium" />
-                                <Label Grid.Row="1" Grid.Column="0" Text="Start:" FontSize="Small" />
-                                <DatePicker Grid.Row="1" Grid.Column="1" Date="{Binding StartDate}" FontSize="Small" />
-                                <Label Grid.Row="2" Grid.Column="0" Text="End:" FontSize="Small" />
-                                <DatePicker Grid.Row="2" Grid.Column="1" Date="{Binding EndDate}" FontSize="Small" />
-                                <Button Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" 
-                                        Clicked="DetailedCourseButton_Clicked" 
-                                        Text="More Info" 
-                                        TextColor="Black" 
-                                        VerticalOptions="Center" />
+                        <Frame Margin="0,5"
+                               BackgroundColor="LightSlateGray"
+                               Padding="10">
+                            <Grid ColumnDefinitions="*,Auto,Auto"
+                                  RowDefinitions="Auto,Auto,Auto"
+                                  RowSpacing="5"
+                                  ColumnSpacing="10">
+                                <Label Grid.ColumnSpan="3"
+                                       Text="{Binding CourseTitle}"
+                                       FontSize="Medium"
+                                       TextColor="White" />
+
+                                <Label Grid.Row="1"
+                                       Grid.Column="0"
+                                       Text="Start:"
+                                       FontSize="Small"
+                                       TextColor="White" />
+                                <Label Grid.Row="1"
+                                       Grid.Column="1"
+                                       TextColor="White"
+                                       Text="{Binding StartDate, StringFormat='{}{0:MMMM dd, yyyy}'}"
+                                       FontSize="Small" />
+
+                                <Label Grid.Row="2"
+                                       Grid.Column="0"
+                                       Text="End:"
+                                       FontSize="Small"
+                                       TextColor="White" />
+                                <Label Grid.Row="2"
+                                       Grid.Column="1"
+                                       TextColor="White"
+                                       Text="{Binding EndDate, StringFormat='{}{0:MMMM dd, yyyy}'}"
+                                       FontSize="Small" />
+
+                                <!-- 'More Info' Button -->
+                                <Button Grid.Row="1"
+                                        Grid.Column="2"
+                                        Grid.RowSpan="2"
+                                        Clicked="DetailedCourseButton_Clicked"
+                                        Text="More Info"
+                                        Padding="5" />
+
+
                             </Grid>
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            <Button Text="Edit Courses" TextColor="Black" BackgroundColor="Red" Margin="0,10,0,0" />
+
+            <Button Text="Add a Course"
+                    Clicked="AddCourseButton_Clicked"
+                    Margin="0,10,0,0" />
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

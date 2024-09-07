@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +7,28 @@ using System.Threading.Tasks;
 
 namespace C971
 {
-    class Assessment
+public   class Assessment
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string Type { get; set; }
+        [PrimaryKey]
+        [AutoIncrement]
+        [Column("AsessmentId")]
+        public int AsessmentId { get; set; }
+        [Column("AssessmentTitle")]
+
+        public string AssessmentTitle { get; set; }
+        [Column("AssessmentType")]
+
+        public string AssessmentType { get; set; }
+        [Column("CourseId")]
+
         public int CourseId { get; set; }
-        public bool Notifications { get; set; }
+ 
+        [Column("EndDate")]
+        public DateTime EndDate { get; set; }
+        [Column("StartDate")]
+
+        public DateTime StartDate { get; set; }
+
+
     }
 }

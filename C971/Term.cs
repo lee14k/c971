@@ -16,10 +16,8 @@ namespace C971
         [Column("TermTitle")]
         public string TermTitle { get; set; }
         [Column("StartDate")]
-
         public DateTime StartDate { get; set; }
         [Column("EndDate")]
-
         public DateTime EndDate { get; set; }
     }
 }

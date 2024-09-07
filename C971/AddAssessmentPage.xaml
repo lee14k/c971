@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="C971.AddAssessmentPage"
+             Title="Add Assessment">
+
+    <Grid Padding="20"
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+          ColumnDefinitions="Auto,*,Auto"
+          RowSpacing="10"
+          ColumnSpacing="10">
+
+        <Label Grid.Row="0"
+               Grid.Column="0"
+               Text="Assessment Title:"
+               FontAttributes="Bold"
+               VerticalOptions="Center" />
+        <Entry Grid.Row="0"
+               Grid.Column="1"
+               Text="{Binding Assessment.AssessmentTitle}"
+               VerticalOptions="Center" />
+
+        <Label Grid.Row="1"
+               Grid.Column="0"
+               Text="Start Date:"
+               FontAttributes="Bold"
+               VerticalOptions="Center" />
+        <DatePicker x:Name="StartDatePicker"
+                    Date="{Binding Assessment.StartDate}"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    VerticalOptions="Center" />
+
+        <Label Grid.Row="2"
+               Grid.Column="0"
+               Text="End Date:"
+               FontAttributes="Bold"
+               VerticalOptions="Center" />
+        <DatePicker x:Name="EndDatePicker"
+                    Date="{Binding Assessment.EndDate}"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    VerticalOptions="Center" />
+
+        <Label Grid.Row="3"
+               Grid.Column="0"
+               Text="Assessment Type:"
+               FontAttributes="Bold"
+               VerticalOptions="Center" />
+        <Picker Grid.Row="3"
+                Grid.Column="1"
+                Title="Select Assessment Type"
+                SelectedItem="{Binding Assessment.AssessmentType}"
+                VerticalOptions="Center">
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Objective</x:String>
+                    <x:String>Performance</x:String>
+                </x:Array>
+            </Picker.ItemsSource>
+        </Picker>
+
+        <Label Grid.Row="4"
+               Grid.Column="0"
+               Text="Enable Notifications:"
+               FontAttributes="Bold"
+               VerticalOptions="Center" />
+        <CheckBox Grid.Row="4"
+                  Grid.Column="1"
+                  IsChecked="{Binding Assessment.AssessmentNotifications, Mode=TwoWay}"
+                  VerticalOptions="Center" />
+
+        <Button Grid.Row="7"
+                Grid.Column="0"
+                Grid.ColumnSpan="3"
+                Text="Add Assessment"
+                TextColor="Black"
+                Clicked="OnAddButtonClicked"
+                Margin="0,20,0,0" />
+    </Grid>
+</ContentPage>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="C971.EditTermsPage"
+             Title="Edit Terms">
+    <ScrollView VerticalOptions="FillAndExpand">
+        <VerticalStackLayout Padding="20"
+                             Spacing="10">
+            <HorizontalStackLayout>
+                <Label Text="Edit Term Title:"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+                <Entry Text="{Binding Term.TermTitle}"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout>
+                <Label Text="Start Date:"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+                <DatePicker Date="{Binding Term.StartDate}"
+                            VerticalOptions="Center" />
+            </HorizontalStackLayout>
+            <HorizontalStackLayout>
+                <Label Text="End Date:"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center" />
+                <DatePicker Date="{Binding Term.EndDate}"
+                            VerticalOptions="Center" />
+            </HorizontalStackLayout>
+            <Button Text="Delete Term"
+                    TextColor="Red"
+                    Clicked="OnDeleteTermClicked"
+                    Margin="0,10,0,0" />
+            <Button Text="Save Changes"
+                    Clicked="OnSaveButtonClicked"
+                    Margin="0,20,0,0" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
