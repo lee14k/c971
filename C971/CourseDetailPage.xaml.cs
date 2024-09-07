@@ -58,9 +58,8 @@ namespace C971
             {
                 var dummyInstructors = new List<Instructor>
                 {
-                    new Instructor { InstructorName = "John Doe", InstructorEmail = "johndoe@example.com", InstructorPhone = "555-1234", CourseId=courseId },
-                    new Instructor { InstructorName = "Jane Smith", InstructorEmail = "janesmith@example.com", InstructorPhone = "555-5678", CourseId=courseId },
-                    new Instructor { InstructorName = "Mark Johnson", InstructorEmail = "markjohnson@example.com", InstructorPhone = "555-8765", CourseId=courseId }
+                    new Instructor { InstructorName = "Anika Patel", InstructorEmail = "anika.patel@strimeuniversity.edu", InstructorPhone = "555-1234", CourseId=courseId },
+                    
                 };
 
                 foreach (var instructor in dummyInstructors)
@@ -125,54 +124,60 @@ namespace C971
 
         private async Task SetReminderNotification(DateTime dateTime, string title, string message, bool isStartDate)
         {
-            // Retrieve the existing notification list
-            var scheduledNotifications = NotificationManager.Instance.ScheduledNotifications;
-
-            // Check if a notification for this course's start/end date already exists
-            bool notificationExists = scheduledNotifications.Any(n =>
-                n.NotificationId == (isStartDate ? _course.CourseId : _course.CourseId + 1000));
-
-            if (notificationExists)
+            try
             {
-                await DisplayAlert("Reminder Exists", $"A reminder for the {(isStartDate ? "start" : "end")} of this course has already been set.", "OK");
-                return; // Exit early, no need to create another reminder
-            }
+                var scheduledNotifications = NotificationManager.Instance.ScheduledNotifications;
 
-            // Check if the date has already passed
-            if (dateTime < DateTime.Now.Date)
-            {
-                await DisplayAlert("Invalid Date", "This date has already happened!", "OK");
-                return; // Exit early, no need to set a reminder for a past date
-            }
+                // Check if a notification already exists
+                bool notificationExists = scheduledNotifications.Any(n =>
+                    n.NotificationId == (isStartDate ? _course.CourseId : _course.CourseId + 1000));
 
-            // If the date is today, pop the notification immediately
-            var notifyTime = dateTime;
-            if (notifyTime.Date == DateTime.Now.Date)
-            {
-                notifyTime = DateTime.Now.AddSeconds(5); // Immediate notification, slight delay for user clarity
-                await DisplayAlert("Reminder Set", "Reminder set successfully!", "OK");
-            }
-
-            // Proceed to create the notification
-            var notificationRequest = new NotificationRequest
-            {
-                NotificationId = isStartDate ? _course.CourseId : _course.CourseId + 1000, // Unique ID for start/end notifications
-                Title = title,
-                Description = message,
-                Schedule = new NotificationRequestSchedule
+                if (notificationExists)
                 {
-                    NotifyTime = notifyTime,
-                    NotifyRepeatInterval = null // Notify once
+                    await Application.Current.MainPage.DisplayAlert("Reminder Exists", $"A reminder for the {(isStartDate ? "start" : "end")} of this course has already been set.", "OK");
+                    return;
                 }
-            };
 
-            // Schedule the notification
-            await LocalNotificationCenter.Current.Show(notificationRequest);
+                if (dateTime < DateTime.Now.Date)
+                {
+                    await Application.Current.MainPage.DisplayAlert("Invalid Date", "This date has already happened!", "OK");
+                    return;
+                }
 
-            // Add the notification to the shared ScheduledNotifications collection
-            NotificationManager.Instance.ScheduledNotifications.Add(notificationRequest);
+                var notifyTime = dateTime;
+                if (notifyTime.Date == DateTime.Now.Date)
+                {
+                    notifyTime = DateTime.Now.AddSeconds(5);
+                    await Application.Current.MainPage.DisplayAlert("Reminder Set", "Reminder set successfully!", "OK");
+                }
 
-            await DisplayAlert("Reminder Set", "Reminder set successfully!", "OK");
+                var notificationRequest = new NotificationRequest
+                {
+                    NotificationId = isStartDate ? _course.CourseId : _course.CourseId + 1000,
+                    Title = title,
+                    Description = message,
+                    Schedule = new NotificationRequestSchedule
+                    {
+                        NotifyTime = notifyTime,
+                        NotifyRepeatInterval = null
+                    }
+                };
+
+                await LocalNotificationCenter.Current.Show(notificationRequest);
+
+                NotificationManager.Instance.ScheduledNotifications.Add(notificationRequest);
+
+                await Application.Current.MainPage.DisplayAlert("Reminder Set", "Reminder set successfully!", "OK");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error setting reminder: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
+                await Application.Current.MainPage.DisplayAlert("Error", $"An error occurred while setting the reminder: {ex.Message}", "OK");
+            }
         }
     }
 }

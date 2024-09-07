@@ -12,7 +12,7 @@ public   class Assessment
         [PrimaryKey]
         [AutoIncrement]
         [Column("AsessmentId")]
-        public int AsessmentId { get; set; }
+        public int AssessmentId { get; set; }
         [Column("AssessmentTitle")]
 
         public string AssessmentTitle { get; set; }

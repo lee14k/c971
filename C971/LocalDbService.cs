@@ -14,13 +14,16 @@ namespace C971
         private readonly SQLiteAsyncConnection _connection;
         public LocalDbService()
         {
+            _connection = new SQLiteAsyncConnection(Path.Combine(FileSystem.AppDataDirectory, DB_NAME));
+            InitializeDatabaseAsync();
+        }
+            private async Task InitializeDatabaseAsync() { 
             try
             {
-                _connection = new SQLiteAsyncConnection(Path.Combine(FileSystem.AppDataDirectory, DB_NAME));
-                _connection.CreateTableAsync<Term>().Wait();
-                _connection.CreateTableAsync<Course>().Wait();
-                _connection.CreateTableAsync<Instructor>().Wait(); 
-                _connection.CreateTableAsync<Assessment>().Wait();
+                await _connection.CreateTableAsync<Term>();
+                await _connection.CreateTableAsync<Course>();
+                await _connection.CreateTableAsync<Instructor>();
+                await _connection.CreateTableAsync<Assessment>();
 
             }
             catch (Exception ex)

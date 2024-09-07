@@ -3,32 +3,39 @@
              x:Class="C971.AssessmentDetailPage"
              Title="Assessment Detail Page">
     <Grid RowDefinitions="*, Auto">
+        <!-- Scrollable Content -->
         <ScrollView Grid.Row="0"
                     VerticalOptions="FillAndExpand">
             <VerticalStackLayout Padding="20"
                                  Spacing="10">
-            <CollectionView ItemsSource="{Binding Assessments}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame Margin="0,10"
-                               BackgroundColor="LightSlateGray"
-                               Padding="15"
-                               CornerRadius="8">
+                <CollectionView ItemsSource="{Binding Assessments}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Margin="0,10"
+                                   BackgroundColor="LightSlateGray"
+                                   Padding="15"
+                                   CornerRadius="8">
                                 <Grid ColumnDefinitions="*,Auto,Auto"
-                                      RowDefinitions="Auto,Auto,Auto,Auto"
+                                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto"
                                       RowSpacing="10"
                                       ColumnSpacing="20">
+
+                                    <!-- Assessment Type Label -->
                                     <Label Grid.Row="0"
                                            Grid.ColumnSpan="3"
                                            Text="{Binding AssessmentType}"
                                            FontSize="Medium"
                                            FontAttributes="Bold"
                                            TextColor="White" />
+
+                                    <!-- Assessment Title Label -->
                                     <Label Grid.Row="1"
                                            Grid.ColumnSpan="3"
                                            Text="{Binding AssessmentTitle}"
                                            FontSize="Medium"
                                            TextColor="White" />
+
+                                    <!-- Start Date Label -->
                                     <Label Grid.Row="2"
                                            Grid.Column="0"
                                            Text="Start:"
@@ -39,6 +46,8 @@
                                            Text="{Binding StartDate, StringFormat='{}{0:MMMM dd, yyyy}'}"
                                            FontSize="Small"
                                            TextColor="White" />
+
+                                    <!-- End Date Label -->
                                     <Label Grid.Row="3"
                                            Grid.Column="0"
                                            Text="End:"
@@ -49,8 +58,33 @@
                                            Text="{Binding EndDate, StringFormat='{}{0:MMMM dd, yyyy}'}"
                                            FontSize="Small"
                                            TextColor="White" />
-                                    <Button Grid.Row="2"
-                                            Grid.RowSpan="2"
+
+                                    <!-- Set Start Reminder Button -->
+                                    <Button Grid.Row="4"
+                                            Grid.Column="2"
+                                            Text="Set Start Reminder"
+                                            Clicked="SetStartReminderButton_Clicked"
+                                            CommandParameter="{Binding .}"
+                                            Padding="5"
+                                            VerticalOptions="Center"
+                                            HorizontalOptions="End"
+                                            BackgroundColor="LightGray"
+                                            TextColor="Black" />
+
+                                    <!-- Set End Reminder Button -->
+                                    <Button Grid.Row="5"
+                                            Grid.Column="2"
+                                            Text="Set End Reminder"
+                                            Clicked="SetEndReminderButton_Clicked"
+                                            CommandParameter="{Binding .}"
+                                            Padding="5"
+                                            VerticalOptions="Center"
+                                            HorizontalOptions="End"
+                                            BackgroundColor="LightGray"
+                                            TextColor="Black" />
+
+                                    <!-- Edit Assessment Button -->
+                                    <Button Grid.Row="6"
                                             Grid.Column="2"
                                             Text="Edit Assessment"
                                             Clicked="AssessmentInfoButton_Clicked"
@@ -62,11 +96,13 @@
                                             TextColor="Black" />
                                 </Grid>
                             </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </VerticalStackLayout>
-    </ScrollView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Add New Assessment Button -->
         <Button Grid.Row="1"
                 Text="Add New Assessment"
                 Clicked="AddNewAssessment_Clicked"

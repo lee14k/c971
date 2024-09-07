@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
 using SQLite;
+using Plugin.LocalNotification;
+
 
 namespace C971
 {
@@ -58,7 +60,7 @@ namespace C971
             if (existingAssessments.Count >= 2)
             {
                 Console.WriteLine("This course already has the maximum of two assessments.");
-                return; 
+                return;
             }
             var remainingSlots = 2 - existingAssessments.Count;
             var dummyAssessments = new List<Assessment>
@@ -74,7 +76,7 @@ namespace C971
         new Assessment
         {
             AssessmentTitle = "Performance Assessment 101",
-            AssessmentType = "Performance", 
+            AssessmentType = "Performance",
             CourseId = courseId,
             StartDate = DateTime.Parse("2024-12-01"),
             EndDate=DateTime.Parse("2024-11-01"),
@@ -106,5 +108,62 @@ namespace C971
             await Navigation.PushAsync(new AddAssessmentPage(courseId));
 
         }
+        private async void SetStartReminderButton_Clicked(object sender, EventArgs e)
+        {
+            var button = sender as Button;
+            var assessment = button?.CommandParameter as Assessment;
+
+            if (assessment != null)
+            {
+                await SetReminderNotification(
+                    assessment.StartDate,
+                    "Assessment Start Reminder",
+                    $"Your assessment '{assessment.AssessmentTitle}' starts today!",
+                    assessment.AssessmentId
+                );
+            }
+        }
+
+        private async void SetEndReminderButton_Clicked(object sender, EventArgs e)
+        {
+            var button = sender as Button;
+            var assessment = button?.CommandParameter as Assessment;
+
+            if (assessment != null)
+            {
+                await SetReminderNotification(
+                    assessment.EndDate,
+                    "Assessment End Reminder",
+                    $"Your assessment '{assessment.AssessmentTitle}' is due today!",
+                    assessment.AssessmentId + 1000 // Ensure unique notification ID for end reminders
+                );
+            }
+        }
+
+        private async Task SetReminderNotification(DateTime notifyTime, string title, string message, int notificationId)
+        {
+            var notifyExactTime = notifyTime.Date.Add(TimeSpan.Zero);
+
+            if (notifyExactTime < DateTime.Now)
+            {
+                notifyExactTime = DateTime.Now.AddMinutes(1); // Set notification 1 minute in the future if time has passed
+            }
+
+            var notificationRequest = new NotificationRequest
+            {
+                NotificationId = notificationId,
+                Title = title,
+                Description = message,
+                Schedule = new NotificationRequestSchedule
+                {
+                    NotifyTime = notifyExactTime,
+                    NotifyRepeatInterval = null // Notify once
+                }
+            };
+
+            // Schedule the notification
+            await LocalNotificationCenter.Current.Show(notificationRequest);
+            await DisplayAlert("Reminder Set", $"A reminder has been set for your assessment! {notifyExactTime:MMMM dd, yyyy HH:mm:ss}", "OK");
+        }
     }
-    }
+}

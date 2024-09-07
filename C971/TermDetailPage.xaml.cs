@@ -52,37 +52,15 @@ namespace C971
                 {
                     new Course
                     {
-                        CourseTitle = "Mathematics 101",
+                        CourseTitle = "Scripting and Programming",
                         TermId = termId,
-                        StartDate = DateTime.Parse("2024-09-01"),
-                        EndDate = DateTime.Parse("2024-12-15"),
+                        StartDate = DateTime.Parse("2025-07-01"),
+                        EndDate = DateTime.Parse("2025-12-31"),
                         Status = "In Progress",
                         InstructorId = 1,
                         Notifications = true,
-                        Notes = "Mathematics course covering algebra and calculus."
-                    },
-                    new Course
-                    {
-                        CourseTitle = "History 101",
-                        TermId = termId,
-                        StartDate = DateTime.Parse("2024-09-01"),
-                        EndDate = DateTime.Parse("2024-12-15"),
-                        Status = "Completed",
-                        InstructorId = 2,
-                        Notifications = true,
-                        Notes = "History course covering World War II."
-                    },
-                    new Course
-                    {
-                        CourseTitle = "Computer Science 101",
-                        TermId = termId,
-                        StartDate = DateTime.Parse("2024-09-01"),
-                        EndDate = DateTime.Parse("2024-12-15"),
-                        Status = "In Progress",
-                        InstructorId = 3,
-                        Notifications = false,
-                        Notes = "Introductory programming course."
-                    }
+                        Notes = "Plan to pass - study hard and write lots of code"
+                    },               
                 };
 
                 // Insert dummy courses into the database

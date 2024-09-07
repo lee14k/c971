@@ -9,21 +9,23 @@ namespace C971
             InitializeComponent();
 
             var navigationPage = new NavigationPage(mainPage);
-            navigationPage.BarBackgroundColor = Colors.MidnightBlue;
             MainPage = navigationPage;
-            InsertTermAndLoad(mainPage);
+            InitializeAppData(mainPage);  // Initialize after UI is shown
         }
 
-        private async void InsertTermAndLoad(MainPage mainPage)
+        private async void InitializeAppData(MainPage mainPage)
         {
-            await InsertTermExample();
-            await mainPage.LoadTerms();
-            ScheduleUpcomingCourseNotifications();
+            // Defer the term insertion and notifications to run in the background
+            await InsertTermExample();  // Load terms after UI is displayed
+            await mainPage.LoadTerms();  // Reload terms if necessary
+            await ScheduleUpcomingCourseNotificationsAsync();  // Schedule notifications asynchronously
         }
+
         private async Task InsertTermExample()
         {
             var dbService = new LocalDbService();
             await ClearAllTerms(dbService);
+
             var newTerm = new Term
             {
                 TermTitle = "Fall 2024",
@@ -37,33 +39,39 @@ namespace C971
         private async Task ClearAllTerms(LocalDbService dbService)
         {
             var existingTerms = await dbService.GetTerms();
-
             foreach (var term in existingTerms)
             {
-                await dbService.DeleteTerm(term); 
+                await dbService.DeleteTerm(term);
                 Console.WriteLine($"Term '{term.TermTitle}' has been deleted.");
             }
-
             Console.WriteLine("All existing terms have been cleared.");
         }
 
-        private async void ScheduleUpcomingCourseNotifications()
+        // 1. Offload scheduling to a background thread with batching to avoid UI freezes
+        private async Task ScheduleUpcomingCourseNotificationsAsync()
         {
-            var dbService = new LocalDbService();
-            var courses = await dbService.GetCourses();
-
-            foreach (var course in courses)
+            await Task.Run(async () =>
             {
-                if (course.StartDate > DateTime.Now)
-                {
-                    ScheduleNotification("Course Start", $"The course '{course.CourseTitle}' starts today.", course.StartDate);
-                }
+                var dbService = new LocalDbService();
+                var courses = await dbService.GetCourses();
 
-                if (course.EndDate > DateTime.Now)
+                // 2. Batch scheduling to avoid overloading the system
+                foreach (var course in courses)
                 {
-                    ScheduleNotification("Course End", $"The course '{course.CourseTitle}' ends today.", course.EndDate);
+                    if (course.StartDate > DateTime.Now)
+                    {
+                        ScheduleNotification("Course Start", $"The course '{course.CourseTitle}' starts today.", course.StartDate);
+                    }
+
+                    if (course.EndDate > DateTime.Now)
+                    {
+                        ScheduleNotification("Course End", $"The course '{course.CourseTitle}' ends today.", course.EndDate);
+                    }
+
+                    // Add a delay between each notification to avoid overloading
+                    await Task.Delay(500);  // Adjust the delay as needed
                 }
-            }
+            });
         }
 
         private void ScheduleNotification(string title, string message, DateTime notifyDate)
@@ -72,15 +80,16 @@ namespace C971
             {
                 var notification = new NotificationRequest
                 {
-                    NotificationId = new Random().Next(1000, 9999), 
+                    NotificationId = new Random().Next(1000, 9999),
                     Title = title,
                     Description = message,
                     Schedule = new NotificationRequestSchedule
                     {
-                        NotifyTime = notifyDate 
+                        NotifyTime = notifyDate
                     }
                 };
 
+                // 3. Show notification
                 LocalNotificationCenter.Current.Show(notification);
             }
         }
