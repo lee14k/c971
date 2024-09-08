@@ -8,11 +8,11 @@ namespace C971
         private DateTime TermStartDate { get; set; }
         private DateTime TermEndDate { get; set; }
 
-        public AddCoursePage(int termId)
+        public AddCoursePage(int termId, DateTime termStartDate, DateTime termEndDate)
         {
             InitializeComponent();
-
-
+            TermStartDate = termStartDate;
+            TermEndDate = termEndDate;
             _course = new Course { TermId = termId };
             _instructor = new Instructor();
 
@@ -106,17 +106,27 @@ namespace C971
                 await DisplayAlert("Validation Error", $"Course end date must be within the term dates: {TermStartDate.ToShortDateString()} - {TermEndDate.ToShortDateString()}.", "OK");
                 return;
             }
-
             var dbService = new LocalDbService();
-            await dbService.CreateInstructor(_instructor);
-            Console.WriteLine($"InstructorId after creation: {_instructor.InstructorId}");
-            await DisplayAlert("Debug", $"Instructor ID: {_instructor.InstructorId}", "OK");
-            _course.InstructorId = _instructor.InstructorId; 
+            _course.InstructorId = _instructor.InstructorId;
+            try
+            {
+                await dbService.CreateInstructor(_instructor);
+            }
+            catch (Exception ex) {
+                await DisplayAlert("Error", $"Failed to add instructor: {ex.Message}", "OK");
+                return;
+                    }
 
-            await dbService.CreateCourse(_course.TermId, _course);
+            try
+            {
+                await dbService.CreateCourse(_course.TermId, _course);
 
+            }
+            catch (Exception ex) {
+                await DisplayAlert("Error", $"Failed to add course: {ex.Message}", "OK");
+                return;
+            }
             await DisplayAlert("Success", "New course and instructor added successfully.", "OK");
-
             await Navigation.PopAsync();
         }
         private bool IsValidPhoneNumber(string phoneNumber)

@@ -15,7 +15,8 @@ namespace C971
 
         private async void InitializeAppData(MainPage mainPage)
         {
-            await InsertTermExample();  
+            await InsertTermExample();
+            await InsertDummyAssessmentsForCourses();
             await mainPage.LoadTerms();
             await ScheduleUpcomingCourseNotificationsAsync();  
         }
@@ -31,10 +32,59 @@ namespace C971
                 StartDate = DateTime.Parse("2025-07-01"),
                 EndDate = DateTime.Parse("2025-12-31")
             };
+
             await dbService.CreateTerm(newTerm);
             Console.WriteLine("Term successfully inserted.");
+
+            await InsertDummyCoursesForTerm(newTerm.TermId);
         }
 
+        private async Task InsertDummyCoursesForTerm(int termId)
+        {
+            var dbService = new LocalDbService();
+
+            var existingCourses = await dbService.GetCoursesByTermId(termId);
+
+            if (existingCourses == null || existingCourses.Count == 0)
+            {
+                var dummyInstructor = await dbService.GetInstructorByName("Anika Patel");
+
+                if (dummyInstructor == null)
+                {
+                    dummyInstructor = new Instructor
+                    {
+                        InstructorName = "Anika Patel",
+                        InstructorEmail = "anika.patel@strimeuniversity.edu",
+                        InstructorPhone = "555-1234"
+                    };
+
+                    await dbService.CreateInstructor(dummyInstructor);
+                    Console.WriteLine("Dummy instructor inserted.");
+                }
+
+                var dummyCourses = new List<Course>
+        {
+            new Course
+            {
+                CourseTitle = "Scripting and Programming",
+                TermId = termId,
+                StartDate = DateTime.Parse("2025-07-01"),
+                EndDate = DateTime.Parse("2025-12-31"),
+                Status = "In Progress",
+                InstructorId = dummyInstructor.InstructorId,
+                Notifications = true,
+                Notes = "Plan to pass - study hard and write lots of code"
+            }
+        };
+
+                foreach (var course in dummyCourses)
+                {
+                    await dbService.CreateCourse(termId, course);
+                }
+
+                Console.WriteLine("Dummy courses successfully inserted.");
+            }
+        }
         private async Task ClearAllTerms(LocalDbService dbService)
         {
             var existingTerms = await dbService.GetTerms();
@@ -87,6 +137,58 @@ namespace C971
 
                 LocalNotificationCenter.Current.Show(notification);
             }
+        }
+        private async Task InsertDummyAssessmentsForCourses()
+        {
+            var dbService = new LocalDbService();
+            var courses = await dbService.GetCourses();
+
+            foreach (var course in courses)
+            {
+                await InsertDummyAssessmentsForCourse(course.CourseId);
+            }
+        }
+
+        private async Task InsertDummyAssessmentsForCourse(int courseId)
+        {
+            var dbService = new LocalDbService();
+
+            var existingAssessments = await dbService.GetAssessmentByCourseId(courseId);
+
+            bool hasObjective = existingAssessments.Any(a => a.AssessmentType == "Objective");
+            bool hasPerformance = existingAssessments.Any(a => a.AssessmentType == "Performance");
+
+            if (!hasObjective)
+            {
+                var objectiveAssessment = new Assessment
+                {
+                    AssessmentTitle = "Objective Assessment 101",
+                    AssessmentType = "Objective",
+                    CourseId = courseId,
+                    StartDate = DateTime.Parse("2025-07-08"),
+                    EndDate = DateTime.Parse("2025-07-15"),
+                };
+
+                await dbService.CreateAssessment(courseId, objectiveAssessment);
+                Console.WriteLine("Objective assessment inserted.");
+            }
+
+            if (!hasPerformance)
+            {
+                var performanceAssessment = new Assessment
+                {
+                    AssessmentTitle = "Performance Assessment 101",
+                    AssessmentType = "Performance",
+                    CourseId = courseId,
+                    StartDate = DateTime.Parse("2025-07-16"),
+                    EndDate = DateTime.Parse("2025-07-23"),
+                };
+
+                await dbService.CreateAssessment(courseId, performanceAssessment);
+                Console.WriteLine("Performance assessment inserted.");
+            }
+
+            Console.WriteLine("Dummy assessments insertion complete.");
         }
     }
 }

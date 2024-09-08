@@ -6,9 +6,11 @@ namespace C971
         public Instructor Instructor { get; set; }
         private DateTime TermStartDate { get; set; }
         private DateTime TermEndDate { get; set; }
-        public EditCoursePage(Course course)
+        public EditCoursePage(Course course, DateTime termStartDate, DateTime termEndDate)
         {
             InitializeComponent();
+            TermStartDate = termStartDate;
+            TermEndDate = termEndDate;
             Course = course;
             LoadInstructor(Course.InstructorId); 
         }
@@ -114,7 +116,8 @@ namespace C971
                 var dbService = new LocalDbService();
                 await dbService.DeleteCourse(Course); 
                 await DisplayAlert("Deleted", "Course deleted successfully.", "OK");
-                await Navigation.PopAsync(); 
+                await Navigation.PopToRootAsync();
+
             }
         }
     }

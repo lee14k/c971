@@ -7,6 +7,7 @@ public partial class EditAssessmentPage : ContentPage
     public ObservableCollection<Assessment> Assessments { get; set; }
     public Course _course;
     public Assessment Assessment { get; set; }
+
     private bool _isInitializing = true;
 
     public EditAssessmentPage(Course course, Assessment assessment)
@@ -90,6 +91,12 @@ public partial class EditAssessmentPage : ContentPage
             await DisplayAlert("Validation Error", "Start date cannot be in the past.", "OK");
             return;
         }
+        if (Assessment.EndDate < DateTime.Now.Date)
+        {
+            await DisplayAlert("Validation Error", "End date cannot be in the past.", "OK");
+            return;
+        }
+
 
         if (Assessment.EndDate < Assessment.StartDate)
         {
@@ -99,11 +106,19 @@ public partial class EditAssessmentPage : ContentPage
 
         if (string.IsNullOrWhiteSpace(Assessment.AssessmentTitle))
         {
-            await DisplayAlert("Validation Error", "Assessment Nmme cannot be empty.", "OK");
+            await DisplayAlert("Validation Error", "Assessment Name cannot be empty.", "OK");
             return;
         }
 
-        var dbService = new LocalDbService();
+  
+
+        var dbService = new LocalDbService(); 
+        var existingAssessments = await dbService.GetAssessmentByCourseId(_course.CourseId);
+        if (existingAssessments.Any(a => a.AssessmentType == Assessment.AssessmentType))
+        {
+            await DisplayAlert("Validation Error", $"There can only be one {Assessment.AssessmentType} assessment per course.", "OK");
+            return;
+        }
         await dbService.UpdateAssessment(Assessment);
 
         foreach (var assessment in Assessments)

@@ -20,7 +20,6 @@ namespace C971
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            await InsertDummyCoursesForTerm(Term.TermId);
             await LoadCoursesAndInstructors(Term.TermId);
         }
 
@@ -52,62 +51,10 @@ namespace C971
             Console.WriteLine($"Total courses loaded: {Courses.Count}");
         }
 
-        private async Task InsertDummyCoursesForTerm(int termId)
-        {
-            var dbService = new LocalDbService();
-
-            var existingCourses = await dbService.GetCoursesByTermId(termId);
-
-            if (existingCourses.Count == 0)
-            {
-                var dummyInstructor = await dbService.GetInstructorByName("Anika Patel");
-
-
-                    dummyInstructor = new Instructor
-                    {
-                        InstructorName = "Anika Patel",
-                        InstructorEmail = "anika.patel@strimeuniversity.edu",
-                        InstructorPhone = "555-1234"
-                    };
-
-                    await dbService.CreateInstructor(dummyInstructor);
-                    Console.WriteLine("Dummy instructor inserted.");
-
-                var dummyCourses = new List<Course>
-        {
-            new Course
-            {
-                CourseTitle = "Scripting and Programming",
-                TermId = termId,
-                StartDate = DateTime.Parse("2025-07-01"),
-                EndDate = DateTime.Parse("2025-12-31"),
-                Status = "In Progress",
-                InstructorId = dummyInstructor.InstructorId, 
-                Notifications = true,
-                Notes = "Plan to pass - study hard and write lots of code"
-            },
-        };
-
-                foreach (var course in dummyCourses)
-                {
-                    await dbService.CreateCourse(termId, course);
-                }
-
-                Console.WriteLine("Dummy course inserted.");
-            }
-            else
-            {
-                Console.WriteLine("Courses already exist for this term.");
-            }
-        }
-        private async Task EditCourse(Course course)
-        {
-            await Navigation.PushAsync(new EditCoursePage(course));
-        }
 
         private async void AddCourseButton_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new AddCoursePage(Term.TermId));
+            await Navigation.PushAsync(new AddCoursePage(Term.TermId, Term.StartDate, Term.EndDate));
         }
 
         private async void DetailedCourseButton_Clicked(object sender, EventArgs e)
@@ -123,7 +70,7 @@ namespace C971
                     instructor = _instructorMap[course.InstructorId];
                 }
 
-                await Navigation.PushAsync(new CourseDetailPage(course, instructor));
+                await Navigation.PushAsync(new CourseDetailPage(course, instructor, Term.StartDate, Term.EndDate));
             }
         }
 

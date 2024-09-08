@@ -9,17 +9,22 @@ namespace C971
     {
         private Course _course;
         private Instructor _instructor;
+        private DateTime _termStartDate;
+        private DateTime _termEndDate;
 
-
-        public CourseDetailPage(Course course, Instructor instructor)
+        public CourseDetailPage(Course course, Instructor instructor, DateTime termStartDate, DateTime termEndDate)
         {
             _course = course;
             _instructor = instructor;
+            _termStartDate = termStartDate;
+            _termEndDate = termEndDate;
             InitializeComponent();
             BindingContext = new
             {
                 Course = _course,
-                Instructor = _instructor
+                Instructor = _instructor,
+
+
             };
         }
 
@@ -53,7 +58,7 @@ namespace C971
         {
             if (_course != null && _instructor != null)
             {
-                await Navigation.PushAsync(new EditCoursePage(_course));
+                await Navigation.PushAsync(new EditCoursePage(_course, _termStartDate, _termEndDate));
             }
             else
             {

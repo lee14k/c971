@@ -47,24 +47,19 @@ namespace C971
         {
             try
             {
-                // Get the list of assessments for the course
                 var assessmentsForCourse = await _connection.Table<Assessment>().Where(a => a.CourseId == courseId).ToListAsync();
 
-                // Enforce the two assessments per course limit
                 if (assessmentsForCourse.Count >= 2)
                 {
                     await Application.Current.MainPage.DisplayAlert("Error", "A course can have a maximum of two assessments.", "OK");
                     return;
                 }
-
-                // Ensure that an assessment of the same type doesn't already exist
                 if (assessmentsForCourse.Any(a => a.AssessmentType == assessment.AssessmentType))
                 {
                     await Application.Current.MainPage.DisplayAlert("Error", $"An assessment of type {assessment.AssessmentType} already exists for this course.", "OK");
                     return;
                 }
 
-                // Insert the assessment if the validation passes
                 await _connection.InsertAsync(assessment);
                 Console.WriteLine("Assessment successfully inserted.");
             }
@@ -221,17 +216,14 @@ namespace C971
         {
             try
             {
-                // Get the list of courses for the term
                 var coursesForTerm = await _connection.Table<Course>().Where(c => c.TermId == termId).ToListAsync();
 
-                // Enforce the maximum of six courses per term
                 if (coursesForTerm.Count >= 6)
                 {
-                    await Application.Current.MainPage.DisplayAlert("Error", "A term can have a maximum of six assessments.", "OK");
+                    await Application.Current.MainPage.DisplayAlert("Error", "A term can have a maximum of six courses.", "OK");
                     return;
                 }
 
-                // Insert the course if the validation passes
                 await _connection.InsertAsync(course);
                 Console.WriteLine("Course successfully inserted.");
             }
@@ -297,7 +289,6 @@ namespace C971
         {
             try
             {
-                // Fetch instructors whose IDs are in the instructorIds list
                 return await _connection.Table<Instructor>()
                                         .Where(i => instructorIds.Contains(i.InstructorId))
                                         .ToListAsync();

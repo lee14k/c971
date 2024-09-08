@@ -29,13 +29,40 @@ namespace C971
 
             BindingContext = this;
 
-            LoadTerms(); 
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
             await LoadTerms(); 
+        }
+        private void OnToggleNotificationsClicked(object sender, EventArgs e)
+        {
+            NotificationsListView.IsVisible = !NotificationsListView.IsVisible;
+
+            if (NotificationsListView.IsVisible)
+            {
+                ToggleNotificationsButton.Text = "Hide Notifications";
+                LoadScheduledNotifications();
+            }
+            else
+            {
+                ToggleNotificationsButton.Text = "Show Notifications";
+            }
+        }
+
+        private void LoadScheduledNotifications()
+        {
+            NotificationsListView.ItemsSource = NotificationManager.Instance.ScheduledNotifications;
+
+            if (NotificationManager.Instance.ScheduledNotifications.Count == 0)
+            {
+                DisplayAlert("No Notifications", "There are no scheduled notifications.", "OK");
+            }
+            else
+            {
+                NotificationsListView.IsVisible = true;
+            }
         }
 
         public async Task LoadTerms()
@@ -74,6 +101,68 @@ namespace C971
         {
 
                 await Navigation.PushAsync(new AddTermPage());
+        }
+        private async Task InsertDummyCoursesForAllTerms()
+        {
+            var dbService = new LocalDbService();
+
+            var terms = await dbService.GetTerms();
+
+            foreach (var term in terms)
+            {
+                await InsertDummyCoursesForTerm(term.TermId);
+            }
+        }
+
+        private async Task InsertDummyCoursesForTerm(int termId)
+        {
+            var dbService = new LocalDbService();
+
+            var existingCourses = await dbService.GetCoursesByTermId(termId);
+
+            if (existingCourses == null || existingCourses.Count == 0)
+            {
+                var dummyInstructor = await dbService.GetInstructorByName("Anika Patel");
+
+                if (dummyInstructor == null)
+                {
+                    dummyInstructor = new Instructor
+                    {
+                        InstructorName = "Anika Patel",
+                        InstructorEmail = "anika.patel@strimeuniversity.edu",
+                        InstructorPhone = "555-1234"
+                    };
+
+                    await dbService.CreateInstructor(dummyInstructor);
+                    Console.WriteLine("Dummy instructor inserted.");
+                }
+
+                var dummyCourses = new List<Course>
+        {
+            new Course
+            {
+                CourseTitle = "Scripting and Programming",
+                TermId = termId,
+                StartDate = DateTime.Parse("2025-07-01"),
+                EndDate = DateTime.Parse("2025-12-31"),
+                Status = "In Progress",
+                InstructorId = dummyInstructor.InstructorId,
+                Notifications = true,
+                Notes = "Plan to pass - study hard and write lots of code"
+            }
+        };
+
+                foreach (var course in dummyCourses)
+                {
+                    await dbService.CreateCourse(termId, course);
+                }
+
+                Console.WriteLine("Dummy course inserted for term: " + termId);
+            }
+            else
+            {
+                Console.WriteLine("Courses already exist for this term. Skipping dummy course insertion.");
+            }
         }
     }
 }

@@ -80,9 +80,6 @@
 	  <Compile Update="EditTermsPage.xaml.cs">
 	    <DependentUpon>EditTermsPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="NotificationTabView.xaml.cs">
-	    <DependentUpon>NotificationTabView.xaml</DependentUpon>
-	  </Compile>
 	  <Compile Update="TermDetailPage.xaml.cs">
 	    <DependentUpon>TermDetailPage.xaml</DependentUpon>
 	  </Compile>
@@ -111,9 +108,6 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="EditTermsPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="NotificationTabView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="TermDetailPage.xaml">

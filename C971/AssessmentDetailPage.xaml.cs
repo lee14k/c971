@@ -28,7 +28,6 @@ namespace C971
         {
             base.OnAppearing();
 
-            await InsertDummyAssessmentsForCourse(_course.CourseId);
             await LoadAssessmentsForCourse(_course.CourseId);
         }
         private async Task LoadAssessmentsForCourse(int courseId)
@@ -49,43 +48,6 @@ namespace C971
             else
             {
                 Console.WriteLine("No assessments found for the course.");
-            }
-        }
-        private async Task InsertDummyAssessmentsForCourse(int courseId)
-        {
-            var dbService = new LocalDbService();
-
-            var existingAssessments = await dbService.GetAssessmentByCourseId(courseId);
-
-            if (existingAssessments.Count >= 2)
-            {
-                Console.WriteLine("This course already has the maximum of two assessments.");
-                return;
-            }
-            var remainingSlots = 2 - existingAssessments.Count;
-            var dummyAssessments = new List<Assessment>
-    {
-        new Assessment
-        {
-            AssessmentTitle = "Objective Assessment 101",
-            AssessmentType = "Objective",
-            CourseId = courseId,
-            StartDate = DateTime.Parse("2025-07-08"),
-            EndDate=DateTime.Parse("2025-07-15"),
-        },
-        new Assessment
-        {
-            AssessmentTitle = "Performance Assessment 101",
-            AssessmentType = "Performance",
-            CourseId = courseId,
-            StartDate = DateTime.Parse("2025-07-16"),
-            EndDate=DateTime.Parse("2025-07-23"),
-
-        }
-    };
-            foreach (var assessment in dummyAssessments.Take(remainingSlots))
-            {
-                await dbService.CreateAssessment(courseId, assessment);
             }
         }
         private async void AssessmentInfoButton_Clicked(object sender, EventArgs e)
@@ -135,7 +97,7 @@ namespace C971
                     assessment.EndDate,
                     "Assessment End Reminder",
                     $"Your assessment '{assessment.AssessmentTitle}' is due today!",
-                    assessment.AssessmentId + 1000 // Ensure unique notification ID for end reminders
+                    assessment.AssessmentId + 1000 
                 );
             }
         }
@@ -146,7 +108,7 @@ namespace C971
 
             if (notifyExactTime < DateTime.Now)
             {
-                notifyExactTime = DateTime.Now.AddMinutes(1); // Set notification 1 minute in the future if time has passed
+                notifyExactTime = DateTime.Now.AddMinutes(1);
             }
 
             var notificationRequest = new NotificationRequest
@@ -157,11 +119,10 @@ namespace C971
                 Schedule = new NotificationRequestSchedule
                 {
                     NotifyTime = notifyExactTime,
-                    NotifyRepeatInterval = null // Notify once
+                    NotifyRepeatInterval = null 
                 }
             };
 
-            // Schedule the notification
             await LocalNotificationCenter.Current.Show(notificationRequest);
             await DisplayAlert("Reminder Set", $"A reminder has been set for your assessment! {notifyExactTime:MMMM dd, yyyy HH:mm:ss}", "OK");
         }

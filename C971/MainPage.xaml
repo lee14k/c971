@@ -1,14 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:views="clr-namespace:C971.Views"
              x:Class="C971.MainPage">
 
     <ScrollView>
         <VerticalStackLayout FlexLayout.AlignSelf="Center"
                              Padding="30,0"
                              Spacing="25">
-            <views:NotificationTabView />
+            <Button x:Name="ToggleNotificationsButton"
+                    Text="View Notifications"
+                    Clicked="OnToggleNotificationsClicked">
+            </Button>
 
             <HorizontalStackLayout Spacing="20">
                 <Image Source="userprofile.svg"
@@ -16,7 +18,7 @@
                        FlexLayout.AlignSelf="Center"
                        VerticalOptions="Center"
                        Aspect="AspectFill"
-                       SemanticProperties.Description="dot net bot in a race car number eight" />
+                       SemanticProperties.Description="user profile placeholder" />
                 <Label Text="Welcome, Student!"
                        FontSize="Large"
                        VerticalOptions="Center"
@@ -24,11 +26,9 @@
                        FlexLayout.AlignSelf="Center" />
             </HorizontalStackLayout>
 
-            <!-- Term Collection -->
             <CollectionView ItemsSource="{Binding Terms}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <!-- StackLayout is the root element for the DataTemplate -->
                         <StackLayout Padding="10">
                             <Frame BackgroundColor="LightSlateGray">
                                 <Grid ColumnDefinitions="Auto,*,Auto"
@@ -49,7 +49,6 @@
                                            Grid.ColumnSpan="2"
                                            Text="{Binding EndDate, StringFormat='{}{0:MMMM dd, yyyy}'}" />
 
-                                    <!-- Go to Courses Button -->
                                     <Button Clicked="DetailedTermButton_Clicked"
                                             TextColor="White"
                                             Text="Go to Courses"
@@ -72,7 +71,6 @@
                     TextColor="White"
                     ></Button>
 
-            <!-- Notifications List -->
             <ListView x:Name="NotificationsListView"
                       IsVisible="False"
                       ItemsSource="{Binding ScheduledNotifications}">
