@@ -69,7 +69,6 @@
                                        Text="{Binding EndDate, StringFormat='{}{0:MMMM dd, yyyy}'}"
                                        FontSize="Small" />
 
-                                <!-- 'More Info' Button -->
                                 <Button Grid.Row="1"
                                         Grid.Column="2"
                                         Grid.RowSpan="2"

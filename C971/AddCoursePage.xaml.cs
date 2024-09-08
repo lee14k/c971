@@ -5,14 +5,15 @@ namespace C971
         private Course _course;
         private Instructor _instructor;
         private bool _isInitializing = true;
+        private DateTime TermStartDate { get; set; }
+        private DateTime TermEndDate { get; set; }
 
         public AddCoursePage(int termId)
         {
             InitializeComponent();
 
 
-            // Initialize new course and instructor objects
-            _course = new Course { TermId = termId }; // Assign termId to the new course
+            _course = new Course { TermId = termId };
             _instructor = new Instructor();
 
             BindingContext = new
@@ -25,7 +26,7 @@ namespace C971
         protected override void OnAppearing()
         {
             base.OnAppearing();
-                            StartDatePicker.Date = DateTime.Today;
+            StartDatePicker.Date = DateTime.Today;
             EndDatePicker.Date = DateTime.Today;
             _isInitializing = false;
         }
@@ -36,7 +37,6 @@ namespace C971
 
             _course.StartDate = e.NewDate;
 
-            DisplayAlert("Date Changed", $"New Start Date: {_course.StartDate}", "OK");
         }
 
         private void OnEndDateSelected(object sender, DateChangedEventArgs e)
@@ -56,7 +56,6 @@ namespace C971
 
         private async void OnSaveButtonClicked(object sender, EventArgs e)
         {
-            // Validation checks
             if (string.IsNullOrWhiteSpace(_course.CourseTitle))
             {
                 await DisplayAlert("Validation Error", "Course Title cannot be empty.", "OK");
@@ -68,7 +67,11 @@ namespace C971
                 await DisplayAlert("Validation Error", "Start date cannot be in the past.", "OK");
                 return;
             }
-
+            if (_course.EndDate < DateTime.Now.Date)
+            {
+                await DisplayAlert("Validation Error", "End date cannot be in the past.", "OK");
+                return;
+            }
             if (_course.EndDate < _course.StartDate)
             {
                 await DisplayAlert("Validation Error", "End date cannot be before the start date.", "OK");
@@ -92,19 +95,34 @@ namespace C971
                 await DisplayAlert("Validation Error", "Instructor Phone number is invalid. It should contain only digits.", "OK");
                 return;
             }
-            var termId = _course.TermId;
-            // Save new course and instructor to the database
+            if (_course.StartDate < TermStartDate || _course.StartDate > TermEndDate)
+            {
+                await DisplayAlert("Validation Error", $"Course start date must be within the term dates: {TermStartDate.ToShortDateString()} - {TermEndDate.ToShortDateString()}.", "OK");
+                return;
+            }
+
+            if (_course.EndDate < TermStartDate || _course.EndDate > TermEndDate)
+            {
+                await DisplayAlert("Validation Error", $"Course end date must be within the term dates: {TermStartDate.ToShortDateString()} - {TermEndDate.ToShortDateString()}.", "OK");
+                return;
+            }
+
             var dbService = new LocalDbService();
-            await dbService.CreateCourse(termId, _course);
             await dbService.CreateInstructor(_instructor);
+            Console.WriteLine($"InstructorId after creation: {_instructor.InstructorId}");
+            await DisplayAlert("Debug", $"Instructor ID: {_instructor.InstructorId}", "OK");
+            _course.InstructorId = _instructor.InstructorId; 
+
+            await dbService.CreateCourse(_course.TermId, _course);
+
             await DisplayAlert("Success", "New course and instructor added successfully.", "OK");
 
             await Navigation.PopAsync();
         }
-
         private bool IsValidPhoneNumber(string phoneNumber)
         {
-            return !string.IsNullOrEmpty(phoneNumber) && phoneNumber.All(char.IsDigit);
+            return !string.IsNullOrEmpty(phoneNumber) &&
+                       System.Text.RegularExpressions.Regex.IsMatch(phoneNumber, @"^[0-9-]+$");
         }
     }
 }

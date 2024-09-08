@@ -8,8 +8,8 @@ public partial class AddTermPage : ContentPage
     public AddTermPage()
     {
         InitializeComponent();
-        _term = new Term();  // Initialize the Term object
-        BindingContext = _term;  // Set _term as the binding context
+        _term = new Term();  
+        BindingContext = _term;  
     }
 
     protected override void OnAppearing()
@@ -26,7 +26,6 @@ public partial class AddTermPage : ContentPage
 
         _term.StartDate = e.NewDate;
 
-        DisplayAlert("Date Changed", $"New Start Date: {_term.StartDate}", "OK");
     }
 
     private void OnEndDateSelected(object sender, DateChangedEventArgs e)
@@ -48,7 +47,7 @@ public partial class AddTermPage : ContentPage
     {
         if (string.IsNullOrWhiteSpace(_term.TermTitle))
         {
-            await DisplayAlert("Validation Error", "Course Title cannot be empty.", "OK");
+            await DisplayAlert("Validation Error", "Term Title cannot be empty.", "OK");
             return;
         }
 
@@ -57,7 +56,11 @@ public partial class AddTermPage : ContentPage
             await DisplayAlert("Validation Error", "Start date cannot be in the past.", "OK");
             return;
         }
-
+        if (_term.EndDate < DateTime.Now.Date)
+        {
+            await DisplayAlert("Validation Error", "End date cannot be in the past.", "OK");
+            return;
+        }
         if (_term.EndDate < _term.StartDate)
         {
             await DisplayAlert("Validation Error", "End date cannot be before the start date.", "OK");
@@ -65,8 +68,23 @@ public partial class AddTermPage : ContentPage
         }
 
         var dbService = new LocalDbService();
+        var allTerms = await dbService.GetTerms();
+        foreach (var existingTerm in allTerms)
+        {
+            if (existingTerm.TermId != _term.TermId)
+            {
+                if ((_term.StartDate >= existingTerm.StartDate && _term.StartDate <= existingTerm.EndDate) ||
+                    (_term.EndDate >= existingTerm.StartDate && _term.EndDate <= existingTerm.EndDate) ||
+                    (_term.StartDate <= existingTerm.StartDate && _term.EndDate >= existingTerm.EndDate))
+                {
+                    await DisplayAlert("Validation Error", "The term dates overlap with another term.", "OK");
+                    return;
+                }
+            }
+        }
+
         await dbService.CreateTerm(_term);
-        await DisplayAlert("Success", "New course and instructor added successfully.", "OK");
+        await DisplayAlert("Success", "New term added successfully.", "OK");
 
         await Navigation.PopAsync();
     }

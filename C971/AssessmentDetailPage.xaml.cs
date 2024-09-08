@@ -70,16 +70,16 @@ namespace C971
             AssessmentTitle = "Objective Assessment 101",
             AssessmentType = "Objective",
             CourseId = courseId,
-            StartDate = DateTime.Parse("2024-11-01"),
-            EndDate=DateTime.Parse("2024-11-01"),
+            StartDate = DateTime.Parse("2025-07-08"),
+            EndDate=DateTime.Parse("2025-07-15"),
         },
         new Assessment
         {
             AssessmentTitle = "Performance Assessment 101",
             AssessmentType = "Performance",
             CourseId = courseId,
-            StartDate = DateTime.Parse("2024-12-01"),
-            EndDate=DateTime.Parse("2024-11-01"),
+            StartDate = DateTime.Parse("2025-07-16"),
+            EndDate=DateTime.Parse("2025-07-23"),
 
         }
     };

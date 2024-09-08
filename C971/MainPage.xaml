@@ -1,17 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:C971.Views"
              x:Class="C971.MainPage">
 
     <ScrollView>
         <VerticalStackLayout FlexLayout.AlignSelf="Center"
                              Padding="30,0"
                              Spacing="25">
-
-            <Button x:Name="ToggleNotificationsButton"
-                    Text="View Notifications"
-                    Clicked="OnToggleNotificationsClicked">
-            </Button>
+            <views:NotificationTabView />
 
             <HorizontalStackLayout Spacing="20">
                 <Image Source="userprofile.svg"
@@ -62,7 +59,6 @@
                                 </Grid>
                             </Frame>
 
-                            <!-- Edit Button (below each Frame) -->
                             <Button Clicked="EditTermButton_Click"
                                     TextColor="White"
                                     Text="Edit Term" />

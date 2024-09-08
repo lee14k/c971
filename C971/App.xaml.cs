@@ -10,15 +10,14 @@ namespace C971
 
             var navigationPage = new NavigationPage(mainPage);
             MainPage = navigationPage;
-            InitializeAppData(mainPage);  // Initialize after UI is shown
+            InitializeAppData(mainPage);
         }
 
         private async void InitializeAppData(MainPage mainPage)
         {
-            // Defer the term insertion and notifications to run in the background
-            await InsertTermExample();  // Load terms after UI is displayed
-            await mainPage.LoadTerms();  // Reload terms if necessary
-            await ScheduleUpcomingCourseNotificationsAsync();  // Schedule notifications asynchronously
+            await InsertTermExample();  
+            await mainPage.LoadTerms();
+            await ScheduleUpcomingCourseNotificationsAsync();  
         }
 
         private async Task InsertTermExample()
@@ -28,9 +27,9 @@ namespace C971
 
             var newTerm = new Term
             {
-                TermTitle = "Fall 2024",
-                StartDate = DateTime.Parse("2024-09-01"),
-                EndDate = DateTime.Parse("2025-02-28")
+                TermTitle = "Term One",
+                StartDate = DateTime.Parse("2025-07-01"),
+                EndDate = DateTime.Parse("2025-12-31")
             };
             await dbService.CreateTerm(newTerm);
             Console.WriteLine("Term successfully inserted.");
@@ -47,7 +46,6 @@ namespace C971
             Console.WriteLine("All existing terms have been cleared.");
         }
 
-        // 1. Offload scheduling to a background thread with batching to avoid UI freezes
         private async Task ScheduleUpcomingCourseNotificationsAsync()
         {
             await Task.Run(async () =>
@@ -55,7 +53,6 @@ namespace C971
                 var dbService = new LocalDbService();
                 var courses = await dbService.GetCourses();
 
-                // 2. Batch scheduling to avoid overloading the system
                 foreach (var course in courses)
                 {
                     if (course.StartDate > DateTime.Now)
@@ -68,8 +65,7 @@ namespace C971
                         ScheduleNotification("Course End", $"The course '{course.CourseTitle}' ends today.", course.EndDate);
                     }
 
-                    // Add a delay between each notification to avoid overloading
-                    await Task.Delay(500);  // Adjust the delay as needed
+                    await Task.Delay(500);  
                 }
             });
         }
@@ -89,7 +85,6 @@ namespace C971
                     }
                 };
 
-                // 3. Show notification
                 LocalNotificationCenter.Current.Show(notification);
             }
         }

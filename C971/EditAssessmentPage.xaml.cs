@@ -49,7 +49,6 @@ public partial class EditAssessmentPage : ContentPage
 
         _course.StartDate = e.NewDate;
 
-        DisplayAlert("Date Changed", $"New Start Date: {_course.StartDate}", "OK");
     }
 
     private void OnEndDateSelected(object sender, DateChangedEventArgs e)
@@ -66,6 +65,18 @@ public partial class EditAssessmentPage : ContentPage
         }
     }
 
+    private async void OnDeleteButtonClicked(object sender, EventArgs e)
+    {
+        bool confirm = await DisplayAlert("Confirm Delete", $"Are you sure you want to delete the Assessment: {Assessment.AssessmentTitle}?", "Yes", "No");
+
+        if (confirm)
+        {
+            var dbService = new LocalDbService();
+            await dbService.DeleteAssessment(Assessment);
+            await DisplayAlert("Deleted", "Assessment deleted successfully.", "OK");
+            await Navigation.PopAsync();
+        }
+    }
     private async void OnSaveButtonClicked(object sender, EventArgs e)
     {
         if (string.IsNullOrWhiteSpace(Assessment.AssessmentTitle))

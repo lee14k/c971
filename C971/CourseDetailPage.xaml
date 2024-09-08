@@ -8,7 +8,6 @@
                BackgroundColor="LightSlateGray"
                CornerRadius="10">
             <VerticalStackLayout Spacing="20">
-                <!-- Course Title Section -->
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Course Title:"
                            FontSize="Large"
@@ -18,13 +17,11 @@
                            TextColor="White" />
                 </VerticalStackLayout>
 
-                <!-- Course Dates Section -->
                 <VerticalStackLayout Spacing="15">
                     <Grid RowDefinitions="Auto,Auto"
                           ColumnDefinitions="*,Auto"
                           RowSpacing="10"
                           ColumnSpacing="10">
-                        <!-- Start Date -->
                         <VerticalStackLayout Grid.Row="0"
                                              Grid.Column="0"
                                              Spacing="5">
@@ -43,7 +40,6 @@
                                 TextColor="Black"
                                 VerticalOptions="End" />
 
-                        <!-- End Date -->
                         <VerticalStackLayout Grid.Row="1"
                                              Grid.Column="0"
                                              Spacing="5">
@@ -64,7 +60,6 @@
                     </Grid>
                 </VerticalStackLayout>
 
-                <!-- Course Status Section -->
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Course Status:"
                            FontSize="Large"
@@ -75,7 +70,6 @@
                            TextColor="White" />
                 </VerticalStackLayout>
 
-                <!-- Instructor Information Section -->
                 <Frame BackgroundColor="SlateGray"
                        Padding="15"
                        CornerRadius="8"
@@ -122,7 +116,6 @@
                         </Grid>
                     </VerticalStackLayout>
                 </Frame>
-                <!-- Course Notes Section -->
                 <Frame BackgroundColor="SlateGray"
                        Padding="15"
                        CornerRadius="8"
@@ -142,7 +135,6 @@
                                 HorizontalOptions="End" />
                     </VerticalStackLayout>
                 </Frame>
-                <!-- Course Details and Actions Section -->
                 <Frame BackgroundColor="SlateGray"
                        Padding="15"
                        CornerRadius="8">

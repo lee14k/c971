@@ -17,8 +17,21 @@ namespace C971
                 await DisplayAlert("Validation Error", "Term Title cannot be empty.", "OK");
                 return;
             }
-
             var dbService = new LocalDbService();
+            var allTerms = await dbService.GetTerms();
+            foreach (var existingTerm in allTerms)
+            {
+                if (existingTerm.TermId != Term.TermId)
+                {
+                    if ((Term.StartDate >= existingTerm.StartDate && Term.StartDate <= existingTerm.EndDate) ||
+                        (Term.EndDate >= existingTerm.StartDate && Term.EndDate <= existingTerm.EndDate) ||
+                        (Term.StartDate <= existingTerm.StartDate && Term.EndDate >= existingTerm.EndDate))
+                    {
+                        await DisplayAlert("Validation Error", "The term dates overlap with another term.", "OK");
+                        return;
+                    }
+                }
+            }
             await dbService.UpdateTerm(Term);
             await DisplayAlert("Success", "Term details saved successfully.", "OK");
 

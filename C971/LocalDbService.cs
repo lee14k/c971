@@ -293,15 +293,18 @@ namespace C971
             return await _connection.Table<Instructor>()
                                     .FirstOrDefaultAsync(i => i.CourseId == courseId); 
         }
-        public async Task<List<Instructor>> GetAllInstructors()
+        public async Task<List<Instructor>> GetInstructorsByIds(List<int> instructorIds)
         {
             try
             {
-                return await _connection.Table<Instructor>().ToListAsync();
+                // Fetch instructors whose IDs are in the instructorIds list
+                return await _connection.Table<Instructor>()
+                                        .Where(i => instructorIds.Contains(i.InstructorId))
+                                        .ToListAsync();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error retrieving all instructors: {ex.Message}");
+                Console.WriteLine($"Error retrieving instructors: {ex.Message}");
                 return new List<Instructor>();
             }
         }
@@ -316,6 +319,20 @@ namespace C971
             catch (Exception ex)
             {
                 Console.WriteLine($"Error retrieving instructor by ID: {ex.Message}");
+                return null;
+            }
+        }
+        public async Task<Instructor> GetInstructorByName(string instructorName)
+        {
+            try
+            {
+                return await _connection.Table<Instructor>()
+                                        .Where(i => i.InstructorName == instructorName)
+                                        .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving instructor by name: {ex.Message}");
                 return null;
             }
         }

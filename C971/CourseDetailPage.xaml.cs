@@ -10,18 +10,16 @@ namespace C971
         private Course _course;
         private Instructor _instructor;
 
-        public ObservableCollection<Instructor> Instructors { get; set; }
 
-        public CourseDetailPage(Course course)
+        public CourseDetailPage(Course course, Instructor instructor)
         {
             _course = course;
+            _instructor = instructor;
             InitializeComponent();
-            Instructors = new ObservableCollection<Instructor>();
-
             BindingContext = new
             {
                 Course = _course,
-                Instructors = Instructors
+                Instructor = _instructor
             };
         }
 
@@ -29,45 +27,25 @@ namespace C971
         {
             base.OnAppearing();
 
-            await InsertDummyInstructorsForCourse(_course.CourseId);
-            await LoadInstructorForCourse(_course.CourseId);
+            if (_instructor == null)
+            {
+                await LoadInstructorForCourse(_course.CourseId);
+            }
         }
 
         private async Task LoadInstructorForCourse(int courseId)
         {
             var dbService = new LocalDbService();
-            var instructorFromDb = await dbService.GetInstructorByCourseId(courseId);
+            _instructor = await dbService.GetInstructorByCourseId(courseId);
 
-            if (instructorFromDb != null)
+            if (_instructor != null)
             {
-                _instructor = instructorFromDb;
+                Console.WriteLine($"Instructor loaded: {_instructor.InstructorName}, ID: {_instructor.InstructorId}");
                 BindingContext = new { Course = _course, Instructor = _instructor };
             }
             else
             {
                 Console.WriteLine("Instructor not found for the course.");
-            }
-        }
-
-        private async Task InsertDummyInstructorsForCourse(int courseId)
-        {
-            var dbService = new LocalDbService();
-            var existingInstructors = await dbService.GetInstructorByCourseId(courseId);
-
-            if (existingInstructors == null)
-            {
-                var dummyInstructors = new List<Instructor>
-                {
-                    new Instructor { InstructorName = "Anika Patel", InstructorEmail = "anika.patel@strimeuniversity.edu", InstructorPhone = "555-1234", CourseId=courseId },
-                    
-                };
-
-                foreach (var instructor in dummyInstructors)
-                {
-                    await dbService.CreateInstructor(instructor);
-                }
-
-                Console.WriteLine("Dummy instructors inserted.");
             }
         }
 
@@ -97,7 +75,6 @@ namespace C971
 
         private async void OnShareNotesButtonClicked(object sender, EventArgs e)
         {
-            // Ensure that the Course object is not null
             if (_course != null && !string.IsNullOrWhiteSpace(_course.Notes))
             {
                 await Share.RequestAsync(new ShareTextRequest
