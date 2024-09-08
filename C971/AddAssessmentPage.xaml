@@ -19,7 +19,6 @@
                Grid.Column="1"
                Text="{Binding Assessment.AssessmentTitle}"
                VerticalOptions="Center" />
-
         <Label Grid.Row="1"
                Grid.Column="0"
                Text="Start Date:"
